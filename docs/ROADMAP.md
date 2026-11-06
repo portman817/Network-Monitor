@@ -59,9 +59,10 @@ Vom Benutzer am 6. November 2026 freigegeben.
 
 Freigabe: ausschließlich `127.0.0.1`; manuelle Einzelprüfung unter Windows. Statuswerte `unknown`, `online`, `offline`. 79 Backend-Tests, 16 Frontend-Tests und Frontend-Build erfolgreich; realer Loopback-Test samt Persistenzprüfung erfolgreich.
 
-## Etappe 5 – Fehlerbehandlung, Oberflächenverbesserungen und Tests: geplant
+## Etappe 5 – Fehlerbehandlung, Oberflächenverbesserungen und Tests: teilweise umgesetzt
 
-- [ ] Fehlerbehandlung vervollständigen.
+- [x] Drei bestätigte P2-Befunde gezielt beheben: Lesen nach Commit, Nullzeichen im Gerätenamen und Überlauf der Geräte-ID; Regressionstests vor und nach den Korrekturen ausführen.
+- [ ] Weitere Fehlerbehandlung nach gesonderter Umfangsabstimmung vervollständigen.
 - [ ] Oberfläche anhand der bisherigen Ergebnisse verbessern.
 - [ ] Separate Lokalisierungsaufgabe: i18n-Architektur mit getrennten Übersetzungswörterbüchern vorsehen, vorhandene Oberflächentexte aus Komponenten und API-Client auslagern und Englisch als Standardsprache einführen. Künftige Unterstützung für Englisch (`en`), Deutsch (`de`) und Russisch (`ru`) berücksichtigen; technische API-Werte und Identifikatoren unverändert lassen. Umsetzung noch ausstehend, derzeit nur dokumentiert.
 - [ ] Tests erweitern und ausführen.
@@ -75,4 +76,4 @@ Die Reihenfolge der Etappen 3 bis 6 ist vom Benutzer bestätigt. Automatische pe
 
 ## Unmittelbarer nächster Schritt
 
-Ergebnisse von Etappe 4 mit dem Benutzer prüfen; danach Umfang und Freigabe für Etappe 5 abstimmen. Keine Netzwerkprüfungen allein aufgrund eines gespeicherten Geräteeintrags ausführen.
+Die drei gezielten P2-Korrekturen sind umgesetzt und geprüft. Den verbleibenden Umfang von Etappe 5 einschließlich Lokalisierung mit dem Benutzer abstimmen. Keine Netzwerkprüfungen allein aufgrund eines gespeicherten Geräteeintrags ausführen.

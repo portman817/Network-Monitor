@@ -42,6 +42,13 @@ class DeviceCreate(BaseModel):
     name: str = Field(min_length=1, max_length=100)
     address: str = Field(min_length=1, max_length=1024)
 
+    @field_validator("name")
+    @classmethod
+    def validate_name(cls, value: str) -> str:
+        if "\x00" in value:
+            raise ValueError("Device name must not contain a null character")
+        return value
+
     @field_validator("address")
     @classmethod
     def validate_address(cls, value: str) -> str:

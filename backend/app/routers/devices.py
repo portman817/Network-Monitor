@@ -2,7 +2,7 @@ from typing import Annotated
 
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Path, Request
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
@@ -26,18 +26,19 @@ def create_device(payload: DeviceCreate, session: DatabaseSession):
     device = Device(**payload.model_dump())
     session.add(device)
     try:
+        session.flush()
+        response = DeviceRead.model_validate(device)
         session.commit()
     except IntegrityError:
         session.rollback()
         if session.scalar(select(Device.id).where(Device.address == payload.address)) is not None:
             raise HTTPException(status_code=409, detail="Device address already exists") from None
         raise
-    session.refresh(device)
-    return device
+    return response
 
 
 @router.post("/{device_id}/check", response_model=DeviceRead)
-def check_device(device_id: int, request: Request):
+def check_device(request: Request, device_id: Annotated[int, Path(ge=1, le=9223372036854775807)]):
     engine = request.app.state.engine
     try:
         # Close the read transaction before waiting for a network response.
@@ -58,9 +59,10 @@ def check_device(device_id: int, request: Request):
                 device.status = result.status
                 device.latency_ms = result.latency_ms
                 device.last_checked_at = checked_at
+                session.flush()
+                response = DeviceRead.model_validate(device)
                 session.commit()
-                session.refresh(device)
-                return DeviceRead.model_validate(device)
+                return response
     except CheckError as exc:
         headers = {"Retry-After": "5"} if exc.status_code == 429 else None
         raise HTTPException(exc.status_code, detail={"code": exc.code}, headers=headers) from None

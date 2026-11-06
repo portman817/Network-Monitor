@@ -113,3 +113,9 @@ Python, FastAPI, React und Vite bilden die technische Grundlage. SQLite und SQLA
 - `200`: durchgeführte Prüfung mit Gerät; `403`: verbotenes Ziel; `404`: fehlendes Gerät; `409`: laufende Prüfung oder zwischenzeitlich geändertes Gerät; `429`: Begrenzung mit `Retry-After: 5`; `503`: Plattform-, Werkzeug- oder Speicherfehler; `504`: äußerer Prozesszeitrahmen überschritten.
 - Fehler liefern einen maschinenlesbaren Wert in `detail.code`; rohe Prozessdiagnosen werden nicht an den Browser weitergegeben.
 - React zeigt eine manuelle Schaltfläche pro Gerät und sperrt sie während der Anfrage. Erfolg aktualisiert die Zeile, Fehler erhalten bisherige Daten. Veraltete Listenabrufe überschreiben das neue Messergebnis nicht.
+
+## Gezielte Korrekturen nach der Codeprüfung
+
+- Gerätenamen dürfen kein Nullzeichen (`U+0000`) enthalten. Die Eingabe wird unabhängig von der Zeichenposition vor dem Datenbankzugriff mit `422` abgelehnt; die übrigen Namensregeln bleiben erhalten.
+- `device_id` im Prüf-Endpunkt ist auf `1` bis `9223372036854775807` begrenzt. Werte außerhalb dieses Bereichs liefern `422` vor Datenbank- oder Ping-Zugriff. Eine gültige, nicht vorhandene ID liefert weiterhin `404`.
+- Beim Erstellen und beim Speichern von Prüfergebnissen erfolgt zunächst `flush`, danach wird eine eigenständige Antwort aus den geladenen Werten aufgebaut. Erst nach erfolgreichem `commit` wird diese zurückgegeben. Nach dem Commit sind weder `refresh` noch erneutes Laden abgelaufener ORM-Attribute für die Antwort erforderlich. Ein fehlgeschlagener Lesezugriff nach erfolgreicher Speicherung kann dadurch keine irreführende Fehlermeldung mehr auslösen.

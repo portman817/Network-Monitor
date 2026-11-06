@@ -96,3 +96,17 @@ Aktueller Status: Etappe 3 umgesetzt und geprüft. Nächster Schritt: Benutzerpr
 - Keine anderen Ziele geprüft, keine DNS-Auflösung, keine neuen Pakete, keine externen Server gestartet, kein Commit und kein Push. Keine neue Browserprüfung durchgeführt.
 
 Aktueller Status: Etappe 4 implementiert und geprüft. Nächster Schritt: Benutzerprüfung und Abstimmung des Umfangs von Etappe 5. Die Loopback-Beschränkung bleibt verbindlich.
+
+
+## 6. November 2026 – Drei bestätigte P2-Befunde korrigiert
+
+- Vor Änderungen `AGENTS.md`, README und aktuelle Projektdokumentation gelesen und Git-Status geprüft.
+- In `backend/tests/test_review_regressions.py` neun parametrisierte Prüfungen ergänzt. Vor der Korrektur: acht fehlgeschlagen, eine gültige ID-Grenzprüfung erfolgreich. Damit wurden alle drei Befunde vor ihrer Behebung reproduziert.
+- Datenbankantworten für Geräteerstellung und Prüf-Ergebnis vor dem Commit vorbereitet; nach erfolgreichem Commit kein `refresh` oder implizites Nachladen mehr. Der Regressionstest simuliert einen ORM-Lesefehler nach dem Commit und prüft sowohl die erfolgreiche Antwort als auch die gespeicherten Werte.
+- Nullzeichen am Anfang, in der Mitte oder am Ende eines Gerätenamens werden mit `422` abgelehnt; keine Datensätze angelegt.
+- Geräte-ID für den Prüf-Endpunkt auf den positiven SQLite-INTEGER-Bereich begrenzt. Positive und negative Überläufe sowie Null liefern `422`; die maximal zulässige, nicht vorhandene ID liefert `404`.
+- Nach der Korrektur: alle neun Regressionstests erfolgreich. Gesamter Backend-Testlauf: 88 erfolgreich, eine bekannte StarletteDeprecationWarning zu httpx/TestClient.
+- Frontend: `npm test` mit 16 erfolgreichen Tests; `npm run build` erfolgreich. `pip check`: `No broken requirements found.`
+- Keine Frontend-Quellen, keine Datenbankschemata und keine Ping-Freigaben verändert. Keine Abhängigkeiten installiert, keine realen Netzwerkprüfungen, kein Commit und kein Push.
+
+Aktueller Status: Nur die drei beauftragten Fehlerkorrekturen aus Etappe 5 umgesetzt. Lokalisierung und weitere Verbesserungen bleiben offen.

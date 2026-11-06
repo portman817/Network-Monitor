@@ -171,3 +171,10 @@ Ergebniswerte sind `unknown`, `online` und `offline`. Erfolgreiche Antworten akt
 Voraussetzung ist Windows mit dem systemeigenen Windows PowerShell und `.NET Ping`. Neue Python-Pakete sind nicht erforderlich. Eine Antwortwartezeit von einer Sekunde, ein äußerer Prozesswartezeitrahmen von fünf Sekunden und fünf Sekunden Mindestabstand begrenzen die Ausführung. Pro Backend-Prozess sind höchstens zwei Prüfungen gleichzeitig erlaubt; den Backend-Start weiterhin mit einem Worker verwenden. Weitere Details und Fehlercodes stehen in `docs/REQUIREMENTS.md`.
 
 Aktuelle Prüfung am 6. November 2026: 79 Backend-Tests, 16 Frontend-Tests und `npm run build` erfolgreich; `pip check` ohne Konflikte. Realer ICMP-Test ausschließlich zu `127.0.0.1`: API `200`, `online`, `0.0` ms. Ergebnis nach erneutem Öffnen einer temporären Testdatenbank erhalten. Keine neuen Browser- oder mobilen Sichtprüfungen in Etappe 4 durchgeführt. Bekannte Starlette-Abkündigungswarnung bleibt bestehen.
+
+
+## Gezielte Fehlerkorrekturen
+
+Gerätenamen mit Nullzeichen werden mit `422` zurückgewiesen. Der Prüf-Endpunkt akzeptiert Geräte-IDs von `1` bis `9223372036854775807`; außerhalb dieses Bereichs liefert er `422`. Antworten nach Geräteerstellung und Prüfung benötigen nach erfolgreichem Commit keinen weiteren Datenbanklesezugriff.
+
+Prüfung am 6. November 2026: neun neue Regressionstests zunächst mit acht erwarteten Fehlern und einer erfolgreichen Grenzprüfung ausgeführt; nach Korrektur alle erfolgreich. Insgesamt 88 Backend-Tests und 16 Frontend-Tests erfolgreich, Frontend-Build und `pip check` erfolgreich. Die bekannte Starlette-Abkündigungswarnung besteht weiter.
