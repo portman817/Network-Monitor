@@ -63,3 +63,6 @@ input[aria-invalid="true"] { border-color: #a72121; }
 .status-online { color: #155b35; background: #e6f5eb; }
 .status-offline { color: #942525; background: #fff0ee; }
 .status-unknown { color: #715215; background: #fff5d9; }
+
+.language-picker { max-width: 200px; margin-left: auto; margin-bottom: 20px; }
+select { padding: 10px; border: 1px solid #9daac0; border-radius: 7px; font: inherit; color: inherit; background: white; }

@@ -1,4 +1,5 @@
 export default {
+  language: 'Language', language_en: 'English', language_de: 'Deutsch', language_ru: '\u0420\u0443\u0441\u0441\u043a\u0438\u0439',
   title: 'Network Monitor', eyebrow: 'Network device management', intro: 'Add devices and view their latest results.',
   healthLoading: 'Checking backend connection…', healthOk: 'Backend connected', healthError: 'Backend unavailable. Refresh to retry.',
   addHeading: 'Add device', name: 'Name', address: 'IP address or domain name',

@@ -64,16 +64,83 @@ Freigabe: ausschließlich `127.0.0.1`; manuelle Einzelprüfung unter Windows. St
 - [x] Drei bestätigte P2-Befunde gezielt beheben: Lesen nach Commit, Nullzeichen im Gerätenamen und Überlauf der Geräte-ID; Regressionstests vor und nach den Korrekturen ausführen.
 - [x] Weitere Fehlerbehandlung vervollständigen: strukturierte Datenbankfehler, Feldfehler, Anfragezeitrahmen und Wiederholung.
 - [x] Oberfläche verbessern: unterscheidbare Statusanzeigen, Abkühlzeit, Erklärung verbotener Ziele und schmaler Bildschirm.
-- [x] Separate Lokalisierungsaufgabe: i18n-Architektur mit getrennten Übersetzungswörterbüchern vorsehen, vorhandene Oberflächentexte aus Komponenten und API-Client auslagern und Englisch als Standardsprache einführen. Künftige Unterstützung für Englisch (`en`), Deutsch (`de`) und Russisch (`ru`) berücksichtigen; technische API-Werte und Identifikatoren unverändert lassen. Englisches Wörterbuch und Rückfall auf Englisch implementiert; vollständige deutsche und russische Übersetzungen sowie Sprachauswahl bleiben einer späteren Freigabe vorbehalten.
+- [x] Separate Lokalisierungsaufgabe: i18n-Architektur mit getrennten Übersetzungswörterbüchern vorsehen, vorhandene Oberflächentexte aus Komponenten und API-Client auslagern und Englisch als Standardsprache einführen. Künftige Unterstützung für Englisch (`en`), Deutsch (`de`) und Russisch (`ru`) berücksichtigen; technische API-Werte und Identifikatoren unverändert lassen. Englisches Wörterbuch und Rückfall auf Englisch implementiert; vollständige deutsche und russische Übersetzungen sowie Sprachauswahl wurden anschließend in Etappe 6 umgesetzt.
 - [x] Tests erweitern und ausführen: 91 Backend-Tests und 31 Frontend-Tests sowie Build erfolgreich. Browserprüfung und Prüfung der Änderungen nach ponytail-review durchgeführt.
 
-## Etappe 6 – Abschlussprüfung und Dokumentation: geplant
+## Etappe 6 – Vollständige Lokalisierung, Abschlussprüfung und Dokumentation: abgeschlossen
 
-- [ ] Gesamte Anwendung und Zusammenspiel ihrer Komponenten prüfen.
-- [ ] Dokumentation, Startanleitung und bekannte Einschränkungen abschließend aktualisieren.
+- [x] Vollständige deutsche (`de`) und russische (`ru`) Wörterbücher ergänzen; englisches Wörterbuch (`en`) beibehalten.
+- [x] Sprachauswahl für English / Deutsch / Русский über Wörterbücher implementieren und Benutzerwahl lokal speichern.
+- [x] Sprachpriorität umsetzen: gespeicherte gültige Auswahl, unterstützte Browsersprache, sonst Englisch. Regionale Sprachvarianten berücksichtigen.
+- [x] Texte, Fehlermeldungen, Datum, Zahlen und HTML-Sprachattribut beim Sprachwechsel aktualisieren; technische API-Werte unverändert lassen.
+- [x] Automatische Tests und Browserprüfungen für alle drei Sprachen einschließlich Sprachwahl und Speicherung durchführen.
+- [x] Gesamte Anwendung und Zusammenspiel ihrer Komponenten prüfen.
+- [x] Alle Tests, Frontend-Build und abschließendes Code-Review durchführen.
+- [x] Dokumentation, Startanleitung und bekannte Einschränkungen abschließend aktualisieren.
 
-Die Reihenfolge der Etappen 3 bis 6 ist vom Benutzer bestätigt. Automatische periodische Überwachung ist dadurch nicht zusätzlich freigegeben.
+Die erste lokale Version umfasst die abgeschlossenen Etappen 1 bis 6. Die folgende Weiterentwicklung in den Etappen 7 bis 12 wurde vom Benutzer als Planung bestätigt. Diese Planung erteilt noch keine Implementierungsfreigabe und erweitert keine erlaubten Netzwerkziele.
+
+## Weiterentwicklung – vereinbarte Planung
+
+Für jede Etappe vor Beginn den konkreten Umfang und die Umsetzung mit dem Benutzer abstimmen. Neue Abhängigkeiten und zusätzliche reale Netzwerkziele benötigen gesonderte Freigabe. Bis dahin bleibt ausschließlich `127.0.0.1` für ICMP erlaubt. Gespeicherte Geräte erhalten keine automatische Prüferlaubnis.
+
+## Etappe 7 – Geräteverwaltung und Prüfberechtigungen: geplant
+
+- [ ] Geräte bearbeiten; Namen und Adressen weiterhin validieren und Duplikate behandeln.
+- [ ] Geräte mit ausdrücklicher Bestätigung löschen; Auswirkungen auf gespeicherte Daten definieren.
+- [ ] Erlaubte Prüfziele ausdrücklich verwalten und von bloß gespeicherten Geräteadressen trennen.
+- [ ] Erweiterung auf eigene Netzwerkadressen nur nach gesonderter Benutzerfreigabe planen; bisherige Loopback-Beschränkung bis dahin beibehalten.
+- [ ] API, Oberfläche, Berechtigungen und Fehlerfälle testen; Übersetzungen und Dokumentation aktualisieren.
+
+## Etappe 8 – Automatische Überwachung: geplant
+
+- [ ] Einstellbares Prüfintervall sowie Start und Stopp der Überwachung bereitstellen.
+- [ ] Nur ausdrücklich erlaubte Ziele prüfen; Parallelität und Zeitrahmen begrenzen.
+- [ ] Doppelte Überwachungsstarts verhindern und Verhalten bei mehreren Prozessen festlegen.
+- [ ] Prüfstarts zeitlich leicht zufällig verteilen, um gleichzeitige Lastspitzen zu vermeiden.
+- [ ] Laufende Prüfungen beim Stoppen kontrolliert abschließen oder beenden; Neustartverhalten definieren.
+- [ ] Zeitsteuerung, Begrenzungen, Fehler und Beendigung mit simulierten Netzwerkaufrufen testen.
+
+## Etappe 9 – Messwerthistorie: geplant
+
+- [ ] Vor Änderungen am bestehenden Datenbankschema Migrationen einführen und Datenerhalt prüfen.
+- [ ] Prüfergebnisse mit Zeitpunkten, Latenz und Zustandswechseln in einer eigenen Tabelle speichern.
+- [ ] Beginn und Dauer von Störungen nachvollziehbar machen; technische Prüffehler von fehlenden ICMP-Antworten unterscheiden.
+- [ ] Aufbewahrungsdauer und Bereinigung festlegen, damit die Datenbank nicht unbegrenzt wächst.
+- [ ] Historienabruf, Migrationen und Bereinigung testen und dokumentieren.
+
+## Etappe 10 – Zustandsübersicht: geplant
+
+- [ ] Anzahl und Status der Geräte übersichtlich zusammenfassen.
+- [ ] Suche, Filter und Sortierung ergänzen.
+- [ ] Latenzverlauf und Anteil erfolgreicher Prüfungen darstellen; Zeitraum und Berechnungsgrundlage eindeutig anzeigen.
+- [ ] Fehlende Messdaten und technische Fehler kenntlich machen; Darstellung in allen drei Sprachen und auf schmalen Bildschirmen prüfen.
+
+## Etappe 11 – Benachrichtigungen: geplant
+
+- [ ] Ereignisse zunächst innerhalb der Anwendung anzeigen.
+- [ ] Nichterreichbarkeit erst nach einer festgelegten Anzahl aufeinanderfolgender Fehlschläge melden; Wiederherstellung gesondert anzeigen.
+- [ ] Wiederholte Meldungen begrenzen und Fehlalarme reduzieren.
+- [ ] Externe Benachrichtigungskanäle nur bei Bedarf nach gesonderter Auswahl und Freigabe hinzufügen; keine Nachrichten ohne ausdrücklichen Auftrag versenden.
+- [ ] Auslösung, Entwarnung und Begrenzung von Meldungen testen.
+
+## Etappe 12 – Einfacher Start und Versionsausgabe: geplant
+
+- [ ] Start mit einem Befehl ermöglichen und kontrolliertes Beenden sicherstellen.
+- [ ] Anwendungseinstellungen nachvollziehbar verwalten.
+- [ ] Datenbank sichern und wiederherstellen; Wiederherstellung praktisch prüfen.
+- [ ] Aktualisierungsanleitung einschließlich Datensicherung und Migrationen erstellen.
+- [ ] Gesamtablauf, Tests, Build und abschließendes Code-Review durchführen; Start- und Bedienungsanleitung aktualisieren.
+
+## Weitere Optionen – noch keiner Etappe zugeordnet
+
+- [ ] TCP-Portprüfungen und HTTP-Dienstprüfungen bei Bedarf separat planen; erfolgreiche Dienste können trotz fehlender ICMP-Antwort verfügbar sein. Auch hierfür gelten ausdrückliche Zielberechtigungen.
+- [ ] Vor einem Zugriff von anderen Computern eine eigene Etappe für Authentifizierung und Zugriffsschutz planen und umsetzen. Eine Netzwerkbereitstellung ist durch die vorstehende Planung nicht freigegeben.
+
+## Prüfungen und Abschluss jeder weiteren Etappe
+
+Implementierung und Dokumentation fertigstellen, passende Tests und Build ausführen, Änderungen mit ponytail-review prüfen, bestätigte Befunde beheben und betroffene Prüfungen wiederholen. Ein vollständiges Projektreview bei wesentlichen Meilensteinen ergänzen. Commit und Push bleiben gesondert genehmigungspflichtig.
 
 ## Unmittelbarer nächster Schritt
 
-Etappe 5 ist umgesetzt und geprüft. Ergebnisse mit dem Benutzer besprechen und Freigabe für die Abschlussprüfung in Etappe 6 einholen. Keine Netzwerkprüfungen allein aufgrund eines gespeicherten Geräteeintrags ausführen.
+Erste lokale Version abnehmen und den konkreten Umfang von Etappe 7 planen. Danach ausdrückliche Implementierungsfreigabe einholen. Die Etappen 7 bis 12 sind noch nicht begonnen; reale ICMP-Prüfungen bleiben ausschließlich für `127.0.0.1` erlaubt.

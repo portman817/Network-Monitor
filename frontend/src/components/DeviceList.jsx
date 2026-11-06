@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { formatCheckedAt, formatLatency, t } from '../i18n';
+import { formatCheckedAt, formatLatency, t, errorMessage } from '../i18n';
 
 export default function DeviceList({ devices, loading, error, onRefresh, onCheck, checking, checkErrors, cooldowns }) {
   const [now, setNow] = useState(Date.now());
@@ -17,7 +17,7 @@ export default function DeviceList({ devices, loading, error, onRefresh, onCheck
     <section className="panel" aria-labelledby="devices-heading" aria-busy={loading}>
       <div className="section-heading"><h2 id="devices-heading">{t('devices')} <span className="count">{devices.length}</span></h2>
         <button className="secondary" onClick={onRefresh} disabled={loading}>{t(loading ? 'loading' : 'refresh')}</button></div>
-      {error && <p className="error" role="alert">{error} {t('retry')}</p>}
+      {error && <p className="error" role="alert">{errorMessage(error)} {t('retry')}</p>}
       {loading && <p role="status">{t('loading')}</p>}
       {!loading && !error && devices.length === 0 && <p className="muted">{t('empty')}</p>}
       {devices.length > 0 && <div className="table-scroll" tabIndex={0} role="region" aria-label={t('caption')}>
@@ -35,7 +35,7 @@ export default function DeviceList({ devices, loading, error, onRefresh, onCheck
               {checking.has(device.id) ? t('checking') : seconds > 0 ? t('cooldown', { seconds }) : t('action')}
             </button>
             {forbidden && <p id={`check-help-${device.id}`} className="muted">{t('forbiddenHint')}</p>}
-            {checkErrors[device.id] && <p className="error" role="alert">{checkErrors[device.id]}</p>}
+            {checkErrors[device.id] && <p className="error" role="alert">{errorMessage(checkErrors[device.id])}</p>}
             </td></tr>;
         })}</tbody></table>
       </div>}

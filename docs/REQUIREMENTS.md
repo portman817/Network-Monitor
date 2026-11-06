@@ -39,7 +39,7 @@ Network Monitor ist ein Lernprojekt zur Verwaltung von Netzwerkgeräten und zur 
 - Benutzeroberfläche standardmäßig auf Englisch. Die Oberflächensprache ist unabhängig von der Kommunikations- und Dokumentationssprache.
 - Eine i18n-Architektur mit separaten Übersetzungswörterbüchern vorsehen. Künftig Englisch (`en`), Deutsch (`de`) und Russisch (`ru`) unterstützen; keine russischen Zeichenketten direkt in React-Komponenten hinzufügen.
 - Technische API-Werte, Variablennamen und Identifikatoren bleiben englisch und unverändert, insbesondere `unknown`, `online`, `offline` und Fehlercodes. Ihre sichtbaren Beschriftungen dürfen über Wörterbücher übersetzt werden.
-- Oberflächentexte sind seit Etappe 5 im separaten englischen Wörterbuch `frontend/src/i18n/en.js` hinterlegt. `i18n/index.js` übernimmt Übersetzung, Parameterersetzung und Formatierung. Englisch ist Standard und Rückfallsprache; vollständige deutsche und russische Wörterbücher sowie eine Sprachauswahl sind noch nicht implementiert.
+- Oberflächentexte sind seit Etappe 5 im separaten englischen Wörterbuch `frontend/src/i18n/en.js` hinterlegt. `i18n/index.js` übernimmt Übersetzung, Parameterersetzung und Formatierung. Englisch ist Standard und Rückfallsprache; vollständige deutsche und russische Wörterbücher sowie eine Sprachauswahl sind seit Etappe 6 implementiert.
 
 ## Architektur
 
@@ -57,7 +57,7 @@ Getrennte Module für Datenbank und Sitzungen, SQLAlchemy-Modell, Pydantic-Schem
 
 ## Grenzen der ersten Version
 
-Etappen 1 bis 5 sind umgesetzt. Die bestätigte weitere Reihenfolge lautet: Etappe 4 ICMP Ping, Latenzmessung und Statusaktualisierung; Etappe 5 Fehlerbehandlung, Oberflächenverbesserungen und Tests; Etappe 6 Abschlussprüfung und Dokumentation. Etappe 4 wurde mit Beschränkung auf die Loopback-Adresse freigegeben und umgesetzt.
+Etappen 1 bis 6 sind umgesetzt. Die bestätigte weitere Reihenfolge lautet: Etappe 4 ICMP Ping, Latenzmessung und Statusaktualisierung; Etappe 5 Fehlerbehandlung, Oberflächenverbesserungen und Tests; Etappe 6 Abschlussprüfung und Dokumentation. Etappe 4 wurde mit Beschränkung auf die Loopback-Adresse freigegeben und umgesetzt.
 
 Etappe 2 enthält kein Ping, keine automatische Überwachung und keine neuen React-Komponenten. Authentifizierung, Alarmierung, Messwerthistorie und produktive Bereitstellung sind bislang nicht als verbindlicher Funktionsumfang bestätigt.
 
@@ -128,5 +128,26 @@ Python, FastAPI, React und Vite bilden die technische Grundlage. SQLite und SQLA
 - `Retry-After` wird als Sekundenwert oder HTTP-Datum ausgewertet; die Prüfschaltfläche zeigt eine Abkühlzeit. Nach erfolgreicher Prüfung wird vorsichtig fünf Sekunden gewartet. Die Backend-Begrenzung bleibt maßgeblich.
 - Nicht freigegebene Ziele haben eine deaktivierte Prüfschaltfläche samt Erklärung. Die serverseitige Sicherheitsprüfung bleibt unverändert. Statuswerte haben unterschiedliche Farben und weiterhin Textbeschriftungen.
 - Die Listenaktualisierung prüft auch die Backend-Verbindung erneut. Bereits angezeigte Daten bleiben bei Abruffehlern erhalten; nach erfolgreicher Geräteprüfung wird der aktuelle Gesamtstand erneut geladen.
-- Formulare passen sich schmalen Bildschirmen an; die Tabelle ist horizontal verschiebbar und per Tastatur fokussierbar. Datum und Zahlen verwenden die aktive englische Sprache; das HTML-Sprachattribut lautet `en`.
+- Formulare passen sich schmalen Bildschirmen an; die Tabelle ist horizontal verschiebbar und per Tastatur fokussierbar. Seit Etappe 6 verwenden Datum, Zahlen und HTML-Sprachattribut die aktive Sprache `en`, `de` oder `ru`.
 - Keine neuen Abhängigkeiten. Frontend-Tests verwenden den vorhandenen Node-Testläufer, Vite zum Laden von JSX und React zur statischen Komponentenausgabe. Dies ersetzt keine automatisierten interaktiven Browsertests.
+
+
+## Vereinbarte Erweiterung von Etappe 6
+
+- Die erste Version soll vollständige Oberflächentexte für Englisch, Deutsch und Russisch in getrennten Wörterbüchern enthalten.
+- Eine sichtbare Sprachauswahl anbieten und die manuelle Wahl im Browser speichern. Bei nicht verfügbarem Browserspeicher muss die Anwendung weiterhin bedienbar bleiben.
+- Sprachpriorität: gespeicherte unterstützte Benutzerwahl vor unterstützter Browsersprache, andernfalls Englisch. Regionale Varianten wie `de-DE` und `ru-RU` den passenden Sprachen zuordnen. Die Betriebssystemsprache wird nicht direkt ausgewertet.
+- Oberflächentexte einschließlich bereits sichtbarer Fehlermeldungen sowie Datum, Zahlen und HTML-Sprachattribut passend zur aktiven Sprache aktualisieren. Geräteeingaben und Messergebnisse beim Wechsel erhalten.
+- Technische API-Werte, Fehlercodes und Identifikatoren nicht übersetzen. Russische Übersetzungen ausschließlich im separaten Wörterbuch ablegen, nicht in React-Komponenten.
+- Alle drei Sprachen, Rückfall, Speicherung und Sprachwechsel automatisiert und im Browser prüfen, bevor die Abschlussprüfung und Dokumentation fertiggestellt werden.
+
+Status: Umfang vom Benutzer bestätigt und vollständig implementiert; automatische Tests und Browserprüfung erfolgreich. Die ICMP-Freigabe bleibt ausschließlich auf `127.0.0.1` beschränkt.
+
+
+## Abschließende Implementierungsentscheidungen
+
+- `useSyncExternalStore` verbindet den Sprachzustand mit React. Der Sprachwechsel benötigt weder Seitenneuladen noch erneute API-Anfragen und lässt Formular- und Gerätedaten erhalten.
+- Manuelle Auswahl wird unter `network-monitor-language` in localStorage gespeichert. Fehlender oder gesperrter Speicher verhindert die Bedienung nicht; nach Neuladen wird dann erneut die Browsersprache berücksichtigt.
+- Fehlerzustände enthalten technische Codes und Feldschlüssel, Erfolgsmeldungen den Gerätenamen. Übersetzung erfolgt bei der Darstellung, sodass sichtbare Meldungen sofort die Sprache wechseln.
+- Die getrennten Wörterbücher `en.js`, `de.js` und `ru.js` besitzen dieselben Schlüssel und Platzhalter. Fehlende Übersetzungen fallen auf Englisch zurück. Russische Texte stehen ausschließlich im russischen Wörterbuch; Eigennamen der Sprachen in anderen Wörterbüchern sind technisch als Unicode-Escapes hinterlegt.
+- Die erste Version ist als lokale Entwicklungsanwendung mit einem Backend-Prozess geprüft. Produktionsbereitstellung, Mehrprozessbegrenzung und automatische Überwachung gehören nicht zur Abnahme dieser Version.

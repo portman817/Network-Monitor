@@ -6,7 +6,7 @@
 - Markdown-Dateinamen auf Englisch und sämtliche Dokumentationsinhalte auf Deutsch schreiben, einschließlich Überschriften, Tabellen, Checklisten und Statusangaben.
 - Technische Bezeichner, Quellcode, Befehle, Pfade sowie Klassen- und Funktionsnamen unverändert lassen.
 - Die Benutzeroberfläche verwendet standardmäßig Englisch. Kommunikationssprache, Dokumentationssprache und Oberflächensprache strikt voneinander trennen.
-- Keine russischen Texte direkt in React-Komponenten einfügen. Oberflächentexte über eine Lokalisierungsarchitektur (i18n) mit getrennten Übersetzungswörterbüchern vorsehen; künftig Englisch (`en`), Deutsch (`de`) und Russisch (`ru`) unterstützen.
+- Keine russischen Texte direkt in React-Komponenten einfügen. Oberflächentexte über eine Lokalisierungsarchitektur (i18n) mit getrennten Übersetzungswörterbüchern vorsehen; Englisch (`en`), Deutsch (`de`) und Russisch (`ru`) unterstützen. Gespeicherte Sprachwahl hat Vorrang vor unterstützter Browsersprache; Englisch bleibt Rückfallsprache.
 - Technische API-Werte, Variablennamen und Identifikatoren bleiben englisch und werden nicht übersetzt. Nur ihre sichtbaren Beschriftungen werden lokalisiert.
 
 ## Vor jeder neuen Aufgabe
@@ -34,7 +34,7 @@
 
 ## Aktuelle Grenzen
 
-- Etappen 1 bis 5 sind umgesetzt. Die Reihenfolge der Etappen 4 bis 6 ist in `docs/ROADMAP.md` bestätigt. Weitere Etappen benötigen eine neue Aufgabenfreigabe; zusätzliche Installationen bleiben gesondert genehmigungspflichtig.
+- Etappen 1 bis 6 sind umgesetzt. Die Reihenfolge der Etappen 4 bis 6 ist in `docs/ROADMAP.md` bestätigt. Weitere Etappen benötigen eine neue Aufgabenfreigabe; zusätzliche Installationen bleiben gesondert genehmigungspflichtig.
 - `GET /api/health` mit `{"status":"ok"}` unverändert erhalten.
 - Etappe 2 umfasst SQLite-Gerätespeicherung und Geräte-API, jedoch kein Ping, keine automatische Überwachung und keine neuen React-Komponenten.
 - Zukünftige Netzwerkprüfungen auf erlaubte Adressen beschränken. Ein gespeicherter Geräteeintrag allein bedeutet keine Prüferlaubnis.

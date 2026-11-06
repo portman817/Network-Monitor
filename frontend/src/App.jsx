@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { checkDevice, getDevices, getHealth } from './api/devices';
-import { locale, t } from './i18n';
+import { locale, t, useLocale, setLocale, languages } from './i18n';
 import DeviceForm from './components/DeviceForm';
 import DeviceList from './components/DeviceList';
 
 export default function App() {
+  const language = useLocale();
   const [health, setHealth] = useState('healthLoading');
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,7 +32,7 @@ export default function App() {
       const data = await getDevices(controller.signal);
       if (!controller.signal.aborted) setDevices(data);
     } catch (error) {
-      if (!controller.signal.aborted) setError(error.message);
+      if (!controller.signal.aborted) setError(error);
     } finally {
       if (!controller.signal.aborted) setLoading(false);
     }
@@ -49,7 +50,7 @@ export default function App() {
       setCooldowns((current) => ({ ...current, [id]: Date.now() + 5000 }));
       loadDevices();
     } catch (error) {
-      setCheckErrors((current) => ({ ...current, [id]: error.message }));
+      setCheckErrors((current) => ({ ...current, [id]: error }));
       if (error.retryAfter) setCooldowns((current) => ({ ...current, [id]: Date.now() + error.retryAfter * 1000 }));
       if (['network_error', 'request_timeout'].includes(error.code)) setHealth('healthError');
     } finally {
@@ -72,7 +73,11 @@ export default function App() {
 
   return (
     <main>
-      <header><p className="eyebrow">{t('eyebrow')}</p><h1>{t('title')}</h1>
+      <header><label className="language-picker" htmlFor="language">{t('language')}
+        <select id="language" value={language} onChange={(event) => setLocale(event.target.value)}>
+          {languages.map((code) => <option key={code} value={code}>{t(`language_${code}`)}</option>)}
+        </select>
+      </label><p className="eyebrow">{t('eyebrow')}</p><h1>{t('title')}</h1>
         <p>{t('intro')}</p><p className="muted" role="status">{t(health)}</p></header>
       <DeviceForm onCreated={handleCreated} />
       <DeviceList devices={devices} loading={loading} error={error} onRefresh={loadDevices}

@@ -1,14 +1,15 @@
-import { t } from '../i18n/index.js';
+import { errorMessage } from '../i18n/index.js';
 
 export const REQUEST_TIMEOUT_MS = 10000;
 export class ApiError extends Error {
   constructor(code, { status = 0, fields = {}, retryAfter = 0 } = {}) {
-    super(t(code, { status }) === code ? t('request_failed', { status }) : t(code, { status }));
+    super();
     this.code = code;
     this.status = status;
     this.fields = fields;
     this.retryAfter = retryAfter;
   }
+  get message() { return errorMessage(this); }
 }
 
 export function retryAfterSeconds(value, now = Date.now()) {
@@ -33,7 +34,7 @@ export async function requestDevices(options = {}, url = '/api/devices', timeout
       if (Array.isArray(detail)) {
         for (const item of detail) {
           const field = item.loc?.[0] === 'body' ? item.loc[1] : null;
-          if (field === 'name' || field === 'address') fields[field] = t(`invalid_${field}`);
+          if (field === 'name' || field === 'address') fields[field] = `invalid_${field}`;
         }
       }
       let code = detail?.code;

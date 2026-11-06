@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { addDevice } from '../api/devices';
-import { t } from '../i18n';
+import { t, errorMessage } from '../i18n';
 
 export default function DeviceForm({ onCreated }) {
   const [name, setName] = useState('');
@@ -16,18 +16,18 @@ export default function DeviceForm({ onCreated }) {
     if (pending.current) return;
     setError(''); setSuccess(''); setFields({});
     const invalid = {};
-    if (!name.trim()) invalid.name = t('required');
-    if (!address.trim()) invalid.address = t('required');
+    if (!name.trim()) invalid.name = 'required';
+    if (!address.trim()) invalid.address = 'required';
     if (Object.keys(invalid).length) { setFields(invalid); return; }
     pending.current = true;
     setSaving(true);
     try {
       const device = await addDevice({ name: name.trim(), address: address.trim() });
       setName(''); setAddress('');
-      setSuccess(t('created', { name: device.name }));
+      setSuccess(device.name);
       onCreated(device);
     } catch (error) {
-      setError(error.message);
+      setError(error);
       setFields(error.fields ?? {});
     } finally {
       pending.current = false;
@@ -45,7 +45,7 @@ export default function DeviceForm({ onCreated }) {
               required maxLength={100} placeholder={t('namePlaceholder')} aria-invalid={!!fields.name}
               aria-describedby={fields.name ? 'name-error' : undefined} />
           </label>
-            {fields.name && <span id="name-error" className="field-error" role="alert">{fields.name}</span>}
+            {fields.name && <span id="name-error" className="field-error" role="alert">{t(fields.name)}</span>}
           </div>
           <div><label htmlFor="device-address">{t('address')}
             <input id="device-address" name="address" value={address} onChange={(e) => setAddress(e.target.value)}
@@ -53,13 +53,13 @@ export default function DeviceForm({ onCreated }) {
               aria-invalid={!!fields.address} aria-describedby={`address-help${fields.address ? ' address-error' : ''}`}
               placeholder={t('addressPlaceholder')} />
           </label>
-            {fields.address && <span id="address-error" className="field-error" role="alert">{fields.address}</span>}
+            {fields.address && <span id="address-error" className="field-error" role="alert">{t(fields.address)}</span>}
           </div>
         </div><p id="address-help" className="muted">{t('addressHelp')}</p>
           <button type="submit">{t(saving ? 'saving' : 'add')}</button>
         </fieldset>
-        {error && <p className="error" role="alert">{error}</p>}
-        <p className="success" role="status">{success}</p>
+        {error && <p className="error" role="alert">{errorMessage(error)}</p>}
+        <p className="success" role="status">{success ? t('created', { name: success }) : ''}</p>
       </form>
     </section>
   );

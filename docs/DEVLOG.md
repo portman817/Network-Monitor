@@ -127,3 +127,36 @@ Aktueller Status: Nur die drei beauftragten Fehlerkorrekturen aus Etappe 5 umges
 - Keine neuen Abhängigkeiten, keine automatische Überwachung, kein Commit und kein Push.
 
 Nächster Schritt: Benutzerprüfung und Freigabe der Etappe 6 zur Abschlussprüfung und Dokumentation.
+
+
+## 6. November 2026 – Umfang von Etappe 6 erweitert
+
+- Benutzerentscheidung dokumentiert: vollständige deutsche und russische Oberflächenübersetzungen, Sprachauswahl, gespeicherte Wahl und Browserspracherkennung gehören zu Etappe 6 vor der Abschlussprüfung.
+- Reihenfolge der Sprachwahl festgelegt: gespeicherte Wahl, unterstützte Browsersprache, Englisch als Rückfall.
+- ROADMAP und REQUIREMENTS ergänzt. Nur Dokumentation geändert; keine Anwendungsimplementierung, keine neuen Tests ausgeführt, kein Commit und kein Push.
+
+
+## 6. November 2026 – Etappe 6: Lokalisierung und Abschlussprüfung
+
+- Vor Beginn Agentenregeln und aktuelle Dokumentation gelesen; Git geprüft. Etappe 5 ist im Commit `8caaef8` gespeichert. Bereits vorhandene Dokumentationsänderungen zur Erweiterung von Etappe 6 erhalten.
+- Vollständige deutsche und russische Wörterbücher ergänzt. Sprachauswahl, gespeicherte Priorität, regionale Browsersprachen und englischen Rückfall implementiert. Zugriff auf gesperrten Browserspeicher abgefangen.
+- Sichtbare Fehler und Feldmeldungen auf Codes beziehungsweise Schlüssel umgestellt; Erfolgsmeldungen aus gespeicherten Gerätenamen zur Anzeigezeit erzeugt. Sprachwechsel erhält Eingaben und Messwerte und aktualisiert Texte, Datum, Zahlen sowie HTML-Sprachattribut.
+- Automatische Prüfung: 91 Backend-Tests erfolgreich; eine bekannte StarletteDeprecationWarning zu httpx/TestClient. Frontend zunächst mit vier sprachabhängigen Alt-Testfehlern, da die Umgebung Deutsch auswählte; Sprache in den betroffenen Tests explizit gesetzt. Danach 38 Frontend-Tests erfolgreich. Schlüsselgleichheit, Platzhalter, Priorität, Speicherung, gesperrter Speicher, Fehlerübersetzung und Formatierung geprüft.
+- `npm run build` erfolgreich: 23 Module verarbeitet. `pip check`: `No broken requirements found.`
+- Standardports 8000 und 5173 waren beim Teststart belegt. Bestehende Prozesse nicht beendet; separate Testserver auf 8001 und 5174 mit `.pytest_cache/stage6-ui.sqlite3` verwendet.
+- Browser wählte beim ersten Öffnen Deutsch. Deutsche Feldfehler erschienen nach ungültiger Adresse; nach Wechsel auf Russisch wurden vorhandene Meldungen übersetzt und Eingaben erhalten. Erstellung, englische Erfolgsmeldung und anschließend deutsche/russische Duplikatmeldung geprüft.
+- Reales ICMP ausschließlich zu `127.0.0.1` erfolgreich: `online`, 0 ms und gespeicherter Prüfzeitpunkt. Domäne `example.invalid` nur gespeichert; Prüfschaltfläche blieb gesperrt, kein DNS und kein Ping zu dieser Domäne.
+- Russische Auswahl blieb nach Neuladen erhalten. Nach Backend-Neustart waren beide Geräte und das Messergebnis weiterhin vorhanden. Bei abgeschaltetem Backend blieben Daten sichtbar; Fehlermeldung ließ sich zwischen Deutsch und Englisch übersetzen. Nach Neustart und Aktualisierung wieder verbundener Zustand.
+- Ansicht mit 390 Pixel Breite sowie Tastaturübergang von Sprachwahl zum Namensfeld geprüft; temporäre Ansichtsgröße zurückgesetzt. Abschlussansicht gespeichert. Beide eigenen Testserver beendet; ursprünglich vorhandene Server nicht verändert.
+- Abschlussprüfung nach ponytail-review: API-Aufrufer, Datenfluss, Tests, Sprachzustand, Fehlerdarstellung und bestehender Backend-Code geprüft. Keine neuen konkreten blockierenden Befunde für die vereinbarte lokale Nutzung mit einem Worker festgestellt. Keine unabhängige Prüfung durch einen zweiten Agenten und keine automatisierte interaktive Browser-Testsuite durchgeführt.
+- README auf den aktuellen Stand konsolidiert; Anforderungen, ROADMAP und Agentenregeln aktualisiert. Keine neuen Pakete, kein Commit und kein Push.
+
+Ergebnis: Alle sechs vereinbarten Etappen der ersten lokalen Version umgesetzt und geprüft. Bekannte Grenzen: Windows-ICMP nur für Loopback, ein Backend-Worker, keine automatische Überwachung und keine Produktionsbereitstellung. Nächster Schritt ist die Benutzerabnahme.
+
+
+## 6. November 2026 – Weiterentwicklung nach der ersten Version geplant
+
+- Benutzer hat die vorgeschlagene Reihenfolge der Etappen 7 bis 12 für die ROADMAP bestätigt: Geräteverwaltung und Prüfberechtigungen, automatische Überwachung, Messwerthistorie, Zustandsübersicht, Benachrichtigungen sowie einfacher Start und Versionsausgabe.
+- Checklisten, Migrationen vor Historien-Schemaänderungen, Aufbewahrungsdauer, kontrollierte Überwachung und Regeln zur Vermeidung von Fehlalarmen dokumentiert. TCP-/HTTP-Prüfungen und Zugriffsschutz vor späterer Netzwerkbereitstellung als zusätzliche Optionen aufgenommen.
+- Planung von Implementierungsfreigabe und Erlaubnis zusätzlicher Netzwerkziele getrennt. ICMP bleibt ausschließlich für `127.0.0.1` freigegeben.
+- Vorhandene Änderungen aus Etappe 6 erhalten. Nur ROADMAP und DEVLOG für diesen Auftrag ergänzt; keine Anwendungsquellen geändert, keine Tests oder Server gestartet, kein Commit und kein Push.
