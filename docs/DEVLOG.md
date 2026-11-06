@@ -80,3 +80,19 @@ Aktueller Status: Etappe 2 umgesetzt und automatisiert geprüft. Nächster Schri
 - Keine Abhängigkeiten installiert, keine Backend-Quellen geändert, kein Ping, keine automatische Überwachung, kein Commit und kein Push.
 
 Aktueller Status: Etappe 3 umgesetzt und geprüft. Nächster Schritt: Benutzerprüfung, danach Detailplanung und Freigabe für Etappe 4 einschließlich erlaubter Zieladressen.
+
+
+## 6. November 2026 – Etappe 4: manuelle ICMP-Prüfung
+
+- Dokumentation, relevante Quellen und Git geprüft; Arbeitsverzeichnis vor Beginn sauber.
+- Benutzerfreigabe umgesetzt: Zustände `unknown`, `online`, `offline`; reale Prüfungen ausschließlich für `127.0.0.1`. Frühere Frontend-Bezeichnungen für `up`/`down` durch die freigegebenen Zustände ersetzt; vorherige Projektetappen erzeugten keine solchen Messergebnisse.
+- `backend/app/ping.py` mit mehrstufiger Zielprüfung, Windows-PowerShell/.NET-Adapter, strukturierten Ergebnissen, Prozesszeitrahmen und Begrenzung paralleler Prüfungen erstellt.
+- `POST /api/devices/{id}/check` ergänzt; kurze separate Datenbanksitzungen, atomare Ergebnisspeicherung und UTC-Verarbeitung ohne Schemaänderung implementiert.
+- Manuelle Prüfschaltfläche und gerätebezogene Fehlermeldungen ergänzt; veraltete Listenantworten überschreiben keine neueren Prüfergebnisse.
+- Erste reale Loopback-Prüfung lieferte `online`, zeigte aber einen Dekodierungsfehler im diagnostischen PowerShell-Ausgabestrom. UTF-8-Ausgabe, deaktivierte Fortschrittsmeldungen und robuste Dekodierung ergänzt. Wiederholung ohne diesen Fehler erfolgreich.
+- Automatische Tests mit unterdrückten Netzwerkaufrufen: 79 Backend-Tests erfolgreich, eine bekannte StarletteDeprecationWarning zur httpx-Verwendung in TestClient. Unter anderem verbotene Ziele ohne DNS/Prozessstart, Zeitüberschreitung, ungültige Prozessantworten, Null-Latenz, Nichterreichbarkeit, Begrenzungen, parallele API-Aufrufe, technische Fehler, Speicherfehler, UTC und Persistenz geprüft.
+- `npm test`: 16 Tests erfolgreich. `npm run build`: erfolgreich, 19 Module verarbeitet. `pip check`: `No broken requirements found.`
+- Realer API-Test über TestClient und temporäre SQLite-Datei: ausschließlich `127.0.0.1`, HTTP `200`, `online`, `0.0` ms und UTC-Zeit mit `Z`. Erneutes Öffnen der Anwendung mit derselben Testdatei bestätigte Persistenz. Arbeitsdatenbank nicht verändert.
+- Keine anderen Ziele geprüft, keine DNS-Auflösung, keine neuen Pakete, keine externen Server gestartet, kein Commit und kein Push. Keine neue Browserprüfung durchgeführt.
+
+Aktueller Status: Etappe 4 implementiert und geprüft. Nächster Schritt: Benutzerprüfung und Abstimmung des Umfangs von Etappe 5. Die Loopback-Beschränkung bleibt verbindlich.

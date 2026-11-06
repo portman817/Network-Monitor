@@ -32,6 +32,15 @@ Network Monitor ist ein Lernprojekt zur Verwaltung von Netzwerkgeräten und zur 
 - Zukünftige Netzwerkprüfungen ausschließlich für erlaubte Adressen durchführen. Speicherung bedeutet keine Prüferlaubnis.
 - Kommunikation auf Russisch, Dokumentation auf Deutsch, Markdown-Dateinamen auf Englisch.
 
+### Sprachtrennung und Lokalisierung
+
+- Kommunikation mit dem Benutzer, Berichte und Erklärungen ausschließlich auf Russisch.
+- Markdown-Dokumentation in `AGENTS.md`, `README.md` und `docs/*.md` ausschließlich auf Deutsch; Dateinamen auf Englisch.
+- Benutzeroberfläche standardmäßig auf Englisch. Die Oberflächensprache ist unabhängig von der Kommunikations- und Dokumentationssprache.
+- Eine i18n-Architektur mit separaten Übersetzungswörterbüchern vorsehen. Künftig Englisch (`en`), Deutsch (`de`) und Russisch (`ru`) unterstützen; keine russischen Zeichenketten direkt in React-Komponenten hinzufügen.
+- Technische API-Werte, Variablennamen und Identifikatoren bleiben englisch und unverändert, insbesondere `unknown`, `online`, `offline` und Fehlercodes. Ihre sichtbaren Beschriftungen dürfen über Wörterbücher übersetzt werden.
+- Bestehende russische Oberflächentexte sind noch nicht umgestellt. Die Auslagerung der Texte, englische Standardsprache und spätere Sprachunterstützung sind eine offene Lokalisierungsaufgabe; diese Dokumentationsänderung implementiert noch keine i18n-Funktion.
+
 ## Architektur
 
 ### Bestehender Aufbau
@@ -48,7 +57,7 @@ Getrennte Module für Datenbank und Sitzungen, SQLAlchemy-Modell, Pydantic-Schem
 
 ## Grenzen der ersten Version
 
-Etappen 1 bis 3 sind umgesetzt. Die bestätigte weitere Reihenfolge lautet: Etappe 4 ICMP Ping, Latenzmessung und Statusaktualisierung; Etappe 5 Fehlerbehandlung, Oberflächenverbesserungen und Tests; Etappe 6 Abschlussprüfung und Dokumentation. Die Detailplanung von Etappe 4 steht noch aus.
+Etappen 1 bis 4 sind umgesetzt. Die bestätigte weitere Reihenfolge lautet: Etappe 4 ICMP Ping, Latenzmessung und Statusaktualisierung; Etappe 5 Fehlerbehandlung, Oberflächenverbesserungen und Tests; Etappe 6 Abschlussprüfung und Dokumentation. Etappe 4 wurde mit Beschränkung auf die Loopback-Adresse freigegeben und umgesetzt.
 
 Etappe 2 enthält kein Ping, keine automatische Überwachung und keine neuen React-Komponenten. Authentifizierung, Alarmierung, Messwerthistorie und produktive Bereitstellung sind bislang nicht als verbindlicher Funktionsumfang bestätigt.
 
@@ -66,7 +75,7 @@ Python, FastAPI, React und Vite bilden die technische Grundlage. SQLite und SQLA
 - Normalisierte Adressen in SQLite eindeutig speichern; HTTP-Antworten `201`, `409` und `422`; Geräteliste nach `id` sortieren.
 - SQLAlchemy `2.0.57`, pytest `9.2.0` und httpx `0.28.1` nach gesonderter Installationsfreigabe installiert und in den Abhängigkeitsdateien fixiert.
 
-`last_checked_at` bleibt in Etappe 2 `NULL`; vor späteren Messungen ist die UTC-Konvention umzusetzen. IPv6-Zonenkennungen, URLs, Ports, Pfade und rein numerische ungültige IP-Schreibweisen werden abgelehnt. Zusätzliche Eingabefelder werden mit `422` abgelehnt. Die Datenbank erzwingt die Eindeutigkeit des normalisierten Adresswerts; bei Konflikten erfolgt ein Rollback und die API liefert `409`. IDN-Konvertierung verwendet den Python-Codec `idna`.
+`last_checked_at` blieb in Etappe 2 `NULL`. Seit Etappe 4 werden Messzeitpunkte in SQLite als UTC ohne Zeitzonenmetadaten gespeichert und beim Lesen mit UTC-Zeitzone versehen; die API liefert einen expliziten UTC-Zeitpunkt. Bestehende DATETIME-Spalten bleiben kompatibel; kein Schemawechsel erforderlich. IPv6-Zonenkennungen, URLs, Ports, Pfade und rein numerische ungültige IP-Schreibweisen werden abgelehnt. Zusätzliche Eingabefelder werden mit `422` abgelehnt. Die Datenbank erzwingt die Eindeutigkeit des normalisierten Adresswerts; bei Konflikten erfolgt ein Rollback und die API liefert `409`. IDN-Konvertierung verwendet den Python-Codec `idna`.
 
 ## Anforderungen und Entscheidungen zu Etappe 3
 
@@ -76,5 +85,31 @@ Python, FastAPI, React und Vite bilden die technische Grundlage. SQLite und SQLA
 - Eingaben bei Fehlern erhalten; Formular während des Speicherns sperren und parallele Übermittlung zusätzlich über eine Referenz verhindern.
 - Abrufe beim erneuten Laden oder Verlassen der Anwendung abbrechen; veraltete Antworten nicht übernehmen.
 - Ladezustand, leere Liste, Fehler und Wiederholungsmöglichkeit anzeigen. Bereits angezeigte Geräte bei einem Abruffehler erhalten.
-- Russische Oberflächentexte, zugeordnete Formularbeschriftungen, Statusmeldungen und sichtbare Tastaturfokussierung; auf schmalen Bildschirmen einspaltiges Formular und horizontal verschiebbare Tabelle.
+- In Etappe 3 wurden russische Oberflächentexte umgesetzt; für die weitere Entwicklung gilt die oben festgelegte englische Standardsprache mit i18n. Zugeordnete Formularbeschriftungen, Statusmeldungen und sichtbare Tastaturfokussierung bleiben erforderlich; auf schmalen Bildschirmen einspaltiges Formular und horizontal verschiebbare Tabelle.
 - Keine zusätzlichen Abhängigkeiten, keine Backend- oder Datenbankschemaänderung. Keine Netzwerkprüfungen der Geräte und kein periodischer Abruf.
+
+## Etappe 4 – manuelle ICMP-Prüfung
+
+### Freigabe und Sicherheit
+
+- Ausschließlich `127.0.0.1` ist für reale Prüfungen erlaubt. Alle anderen IPv4-/IPv6-Adressen, Netze und Domänen einschließlich `localhost` werden mit `403` vor jedem Prozessstart abgelehnt. Keine DNS-Auflösung; deshalb ist der zuvor vorgeschlagene DNS-Zeitrahmen von zwei Sekunden derzeit nicht erforderlich.
+- `allowed_target` prüft das Ziel im API und erneut im Ping-Adapter. Auch das feste PowerShell-Programm erlaubt ausschließlich diese Adresse. Keine vom Client übergebene Zieladresse oder Zeitüberschreitung im Prüf-Endpunkt.
+- Windows-Adapter über den Systempfad aus `GetSystemDirectoryW`; PowerShell ohne Profil, nicht interaktiv und ohne Fenster. Fester UTF-16LE-kodierter Programmtext; Ziel als JSON über Standardeingabe, keine Einfügung in Befehlsquelltext, `shell=False`.
+- Keine neuen Pakete, keine erweiterten Benutzerrechte und keine Änderung von ExecutionPolicy oder Firewall. Andere Betriebssysteme liefern eine klare Nichtverfügbarkeitsmeldung.
+
+### Ausführung und Grenzen
+
+- `POST /api/devices/{id}/check`: eine manuelle Einzelprüfung, keine periodische Überwachung und keine Sammelprüfung.
+- Genau ein Echo Request über `.NET Ping.Send` mit 1000 ms Antwortwartezeit. `RoundtripTime` ist die Latenz; Prozessstartzeit wird nicht als Netzwerklatenz ausgegeben. Null Millisekunden sind gültig.
+- Äußerer Prozesszeitrahmen fünf Sekunden über `subprocess.run(timeout=5)`; bei Überschreitung beendet und wartet Python auf den Kindprozess. Die Betriebssystemphase der Prozesserzeugung ist nicht auf allen Plattformen unterbrechbar; es handelt sich um einen Prozesswartezeitrahmen, keine harte Echtzeitgarantie für die gesamte HTTP-Anfrage.
+- Höchstens zwei aktive Prüfungen je Backend-Prozess, keine Warteschlange, kein paralleler Lauf für dieselbe Geräte-ID, fünf Sekunden Mindestabstand zwischen Prüfstarts. Abbruch oder Fehler gibt den aktiven Platz frei. Abkühlzeiten werden beim Neustart zurückgesetzt.
+- Diese Begrenzung setzt einen einzelnen Uvicorn-Prozess voraus. Mehrere Worker benötigen vor ihrer Einführung eine gemeinsame Begrenzung. Datenbanklesesitzung vor Ping schließen; erst danach eine kurze Schreibtransaktion öffnen.
+
+### Zustände, Speicherung und Antworten
+
+- Zustände ausschließlich `unknown`, `online`, `offline`; `up` und `down` werden nicht eingeführt.
+- Erfolgreicher Echo Reply: `online`, gemessene Latenz, UTC-Abschlusszeit. ICMP-Timeout oder bestätigte Nichterreichbarkeit: `offline`, Latenz `NULL`, UTC-Abschlusszeit. `offline` ist keine Aussage über Stromversorgung oder Erreichbarkeit anderer Dienste.
+- Technische Fehler, verbotene Ziele und Datenbankfehler überschreiben vorherige Messdaten nicht. Speicherung von Status, Latenz und Zeit erfolgt in einer Transaktion.
+- `200`: durchgeführte Prüfung mit Gerät; `403`: verbotenes Ziel; `404`: fehlendes Gerät; `409`: laufende Prüfung oder zwischenzeitlich geändertes Gerät; `429`: Begrenzung mit `Retry-After: 5`; `503`: Plattform-, Werkzeug- oder Speicherfehler; `504`: äußerer Prozesszeitrahmen überschritten.
+- Fehler liefern einen maschinenlesbaren Wert in `detail.code`; rohe Prozessdiagnosen werden nicht an den Browser weitergegeben.
+- React zeigt eine manuelle Schaltfläche pro Gerät und sperrt sie während der Anfrage. Erfolg aktualisiert die Zeile, Fehler erhalten bisherige Daten. Veraltete Listenabrufe überschreiben das neue Messergebnis nicht.

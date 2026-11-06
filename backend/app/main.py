@@ -5,6 +5,7 @@ from fastapi import FastAPI
 
 from .database import Base, DEFAULT_DATABASE_PATH, build_engine
 from .routers.devices import router
+from .ping import CheckLimiter, ping_once
 
 
 async def health() -> dict[str, str]:
@@ -18,6 +19,8 @@ def create_app(database_path: Path | None = None) -> FastAPI:
         try:
             Base.metadata.create_all(engine)
             application.state.engine = engine
+            application.state.check_limiter = CheckLimiter()
+            application.state.ping_runner = ping_once
             yield
         finally:
             engine.dispose()

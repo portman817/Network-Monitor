@@ -1,9 +1,30 @@
 import { afterEach, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { addDevice, getDevices } from './devices.js';
+import { addDevice, checkDevice, getDevices } from './devices.js';
 
 const originalFetch = globalThis.fetch;
 afterEach(() => { globalThis.fetch = originalFetch; });
+
+test('manual check posts device id and returns updated measurement', async () => {
+  globalThis.fetch = async (url, options) => {
+    assert.equal(url, '/api/devices/7/check');
+    assert.equal(options.method, 'POST');
+    assert.equal(options.body, undefined);
+    return Response.json({ id: 7, status: 'online', latency_ms: 0 });
+  };
+  assert.equal((await checkDevice(7)).status, 'online');
+});
+
+for (const [code, status, message] of [
+  ['target_forbidden', 403, /127.0.0.1/], ['check_in_progress', 409, /уже выполняется/],
+  ['check_rate_limited', 429, /5 секунд/], ['ping_process_timeout', 504, /Предыдущие данные/],
+  ['storage_unavailable', 503, /сохранить/], ['platform_unsupported', 503, /Windows/],
+]) {
+  test(`check reports ${code}`, async () => {
+    globalThis.fetch = async () => Response.json({ detail: { code } }, { status });
+    await assert.rejects(checkDevice(1), message);
+  });
+}
 
 test('GET passes cancellation signal and returns devices', async () => {
   const controller = new AbortController();

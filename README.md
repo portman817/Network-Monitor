@@ -1,6 +1,6 @@
 # Network Monitor
 
-Lernprojekt mit Python, FastAPI, React und Vite. Etappe 1 umfasst das Oberflächengrundgerüst und `GET /api/health` mit der Antwort `{"status":"ok"}`. Etappe 2 ergänzt SQLite-Gerätespeicherung und REST-API. Etappe 3 bietet die React-Oberfläche zum Anzeigen und Hinzufügen von Geräten. Ping und automatische Überwachung sind noch nicht implementiert.
+Lernprojekt mit Python, FastAPI, React und Vite. Etappe 1 umfasst das Oberflächengrundgerüst und `GET /api/health` mit der Antwort `{"status":"ok"}`. Etappe 2 ergänzt SQLite-Gerätespeicherung und REST-API. Etappe 3 bietet die React-Oberfläche zum Anzeigen und Hinzufügen von Geräten. Etappe 4 ergänzt manuelle ICMP-Prüfungen ausschließlich für `127.0.0.1` unter Windows. Automatische Überwachung ist nicht implementiert.
 
 ## Projektdokumentation
 
@@ -161,3 +161,13 @@ npm run build
 ```
 
 Am 6. November 2026: neun API-Client-Tests und 40 Backend-Tests erfolgreich; Frontend-Build erfolgreich. Browserprüfung: leere Liste, Erstellung, Duplikat, ungültige Adresse, erneutes Laden sowie Verbindungsfehler und Wiederherstellung geprüft. Testgeräte wurden ausschließlich in `.pytest_cache/ui-stage3.sqlite3` gespeichert. Die Testserver wurden danach beendet. Eine gesonderte mobile Browserprüfung und automatisierte React-Komponententests wurden nicht durchgeführt.
+
+## Manuelle ICMP-Prüfung
+
+Für einen realen Test ein Gerät mit Adresse `127.0.0.1` hinzufügen und dessen Prüfschaltfläche betätigen. Alternativ `POST /api/devices/{id}/check` aufrufen. Alle anderen Adressen und Domänen, auch `localhost` und `::1`, sind verboten. Ihre Speicherung zur Verwaltung bleibt möglich, ihre Prüfung wird serverseitig mit `403` abgelehnt. Keine DNS-Anfragen werden ausgeführt.
+
+Ergebniswerte sind `unknown`, `online` und `offline`. Erfolgreiche Antworten aktualisieren Latenz und UTC-Zeitpunkt; bei ausbleibendem ICMP-Reply wird die Latenz geleert. Technische Fehler lassen vorhandene Messdaten unverändert. Ein fehlender ICMP-Reply bedeutet nicht zwingend, dass das Gerät ausgeschaltet ist.
+
+Voraussetzung ist Windows mit dem systemeigenen Windows PowerShell und `.NET Ping`. Neue Python-Pakete sind nicht erforderlich. Eine Antwortwartezeit von einer Sekunde, ein äußerer Prozesswartezeitrahmen von fünf Sekunden und fünf Sekunden Mindestabstand begrenzen die Ausführung. Pro Backend-Prozess sind höchstens zwei Prüfungen gleichzeitig erlaubt; den Backend-Start weiterhin mit einem Worker verwenden. Weitere Details und Fehlercodes stehen in `docs/REQUIREMENTS.md`.
+
+Aktuelle Prüfung am 6. November 2026: 79 Backend-Tests, 16 Frontend-Tests und `npm run build` erfolgreich; `pip check` ohne Konflikte. Realer ICMP-Test ausschließlich zu `127.0.0.1`: API `200`, `online`, `0.0` ms. Ergebnis nach erneutem Öffnen einer temporären Testdatenbank erhalten. Keine neuen Browser- oder mobilen Sichtprüfungen in Etappe 4 durchgeführt. Bekannte Starlette-Abkündigungswarnung bleibt bestehen.

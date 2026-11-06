@@ -2,9 +2,12 @@
 
 ## Sprache
 
-- Mit dem Benutzer ausschließlich auf Russisch kommunizieren, sofern er keine andere Sprache verlangt. Dies gilt für Pläne, Rückfragen, Berichte, Warnungen und Fehlermeldungen.
+- Mit dem Benutzer ausschließlich auf Russisch kommunizieren. Dies gilt für Pläne, Rückfragen, Berichte, Erklärungen, Warnungen und Fehlermeldungen.
 - Markdown-Dateinamen auf Englisch und sämtliche Dokumentationsinhalte auf Deutsch schreiben, einschließlich Überschriften, Tabellen, Checklisten und Statusangaben.
 - Technische Bezeichner, Quellcode, Befehle, Pfade sowie Klassen- und Funktionsnamen unverändert lassen.
+- Die Benutzeroberfläche verwendet standardmäßig Englisch. Kommunikationssprache, Dokumentationssprache und Oberflächensprache strikt voneinander trennen.
+- Keine russischen Texte direkt in React-Komponenten einfügen. Oberflächentexte über eine Lokalisierungsarchitektur (i18n) mit getrennten Übersetzungswörterbüchern vorsehen; künftig Englisch (`en`), Deutsch (`de`) und Russisch (`ru`) unterstützen.
+- Technische API-Werte, Variablennamen und Identifikatoren bleiben englisch und werden nicht übersetzt. Nur ihre sichtbaren Beschriftungen werden lokalisiert.
 
 ## Vor jeder neuen Aufgabe
 
@@ -31,7 +34,9 @@
 
 ## Aktuelle Grenzen
 
-- Etappen 1 bis 3 sind umgesetzt. Die Reihenfolge der Etappen 4 bis 6 ist in `docs/ROADMAP.md` bestätigt. Weitere Etappen benötigen eine neue Aufgabenfreigabe; zusätzliche Installationen bleiben gesondert genehmigungspflichtig.
+- Etappen 1 bis 4 sind umgesetzt. Die Reihenfolge der Etappen 4 bis 6 ist in `docs/ROADMAP.md` bestätigt. Weitere Etappen benötigen eine neue Aufgabenfreigabe; zusätzliche Installationen bleiben gesondert genehmigungspflichtig.
 - `GET /api/health` mit `{"status":"ok"}` unverändert erhalten.
 - Etappe 2 umfasst SQLite-Gerätespeicherung und Geräte-API, jedoch kein Ping, keine automatische Überwachung und keine neuen React-Komponenten.
 - Zukünftige Netzwerkprüfungen auf erlaubte Adressen beschränken. Ein gespeicherter Geräteeintrag allein bedeutet keine Prüferlaubnis.
+
+- Für reale ICMP-Prüfungen ist derzeit ausschließlich `127.0.0.1` freigegeben. Alle anderen Adressen, Netze und Domänen sind verboten; die Freigabe darf nicht ohne Benutzerauftrag erweitert werden. Zustände: `unknown`, `online`, `offline`.

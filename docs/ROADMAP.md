@@ -49,18 +49,21 @@ Vom Benutzer am 6. November 2026 freigegeben.
 - [x] Frontend-Build, neun API-Client-Tests und 40 Backend-Tests erfolgreich ausführen.
 - [x] Browserprüfung mit isolierter Testdatenbank durchführen und Dokumentation aktualisieren.
 
-## Etappe 4 – ICMP Ping, Latenzmessung und Statusaktualisierung: geplant
+## Etappe 4 – ICMP Ping, Latenzmessung und Statusaktualisierung: abgeschlossen
 
-- [ ] Vor Implementierungsbeginn den konkreten Umfang abstimmen und freigeben lassen.
-- [ ] Erlaubte Zieladressen und deren Durchsetzung vor Netzwerkprüfungen festlegen.
-- [ ] ICMP Ping und Latenzmessung implementieren.
-- [ ] Status und Prüfzeitpunkt nach definierter UTC-Konvention aktualisieren.
-- [ ] Erfolg, Nichterreichbarkeit und technische Fehler testen.
+- [x] Vor Implementierungsbeginn den konkreten Umfang abstimmen und freigeben lassen.
+- [x] Erlaubte Zieladressen und deren Durchsetzung vor Netzwerkprüfungen festlegen.
+- [x] ICMP Ping und Latenzmessung implementieren.
+- [x] Status und Prüfzeitpunkt nach definierter UTC-Konvention aktualisieren.
+- [x] Erfolg, Nichterreichbarkeit und technische Fehler testen.
+
+Freigabe: ausschließlich `127.0.0.1`; manuelle Einzelprüfung unter Windows. Statuswerte `unknown`, `online`, `offline`. 79 Backend-Tests, 16 Frontend-Tests und Frontend-Build erfolgreich; realer Loopback-Test samt Persistenzprüfung erfolgreich.
 
 ## Etappe 5 – Fehlerbehandlung, Oberflächenverbesserungen und Tests: geplant
 
 - [ ] Fehlerbehandlung vervollständigen.
 - [ ] Oberfläche anhand der bisherigen Ergebnisse verbessern.
+- [ ] Separate Lokalisierungsaufgabe: i18n-Architektur mit getrennten Übersetzungswörterbüchern vorsehen, vorhandene Oberflächentexte aus Komponenten und API-Client auslagern und Englisch als Standardsprache einführen. Künftige Unterstützung für Englisch (`en`), Deutsch (`de`) und Russisch (`ru`) berücksichtigen; technische API-Werte und Identifikatoren unverändert lassen. Umsetzung noch ausstehend, derzeit nur dokumentiert.
 - [ ] Tests erweitern und ausführen.
 
 ## Etappe 6 – Abschlussprüfung und Dokumentation: geplant
@@ -72,4 +75,4 @@ Die Reihenfolge der Etappen 3 bis 6 ist vom Benutzer bestätigt. Automatische pe
 
 ## Unmittelbarer nächster Schritt
 
-Ergebnisse von Etappe 3 mit dem Benutzer prüfen. Anschließend Etappe 4 planen, erlaubte Zieladressen und Prüfverhalten abstimmen und Implementierungsfreigabe einholen. Keine Netzwerkprüfungen allein aufgrund eines gespeicherten Geräteeintrags ausführen.
+Ergebnisse von Etappe 4 mit dem Benutzer prüfen; danach Umfang und Freigabe für Etappe 5 abstimmen. Keine Netzwerkprüfungen allein aufgrund eines gespeicherten Geräteeintrags ausführen.
