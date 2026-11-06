@@ -61,3 +61,22 @@ Nächster Schritt: Benutzerfreigabe für Etappe 2, technische Details und gesond
 - Keine Änderungen am Frontend, kein Ping, keine automatische Überwachung, kein Commit und kein Push.
 
 Aktueller Status: Etappe 2 umgesetzt und automatisiert geprüft. Nächster Schritt: Benutzerprüfung und Abstimmung des weiteren Etappenplans.
+
+
+## 6. November 2026 – Etappe 3: Geräteoberfläche
+
+- Vor Beginn Agentenregeln, README, alle Projektdokumente, Quellcode und Git-Status gelesen. Arbeitsverzeichnis war sauber; Etappe 2 ist im Commit `721981f` gespeichert.
+- Benutzerfreigabe für Etappe 3 und die Reihenfolge der weiteren Etappen 4 bis 6 erhalten; ROADMAP entsprechend ergänzt.
+- API-Client, Formular und Gerätetabelle erstellt; Ladezustände, leere Liste, Fehler, Erfolgsmeldung und erneuten Abruf ergänzt.
+- Nach Speicherung Liste aktualisiert; parallele Formularübermittlung und veraltete Abrufantworten verhindert.
+- `npm run build` erfolgreich: Vite 8.3.6, 19 Module verarbeitet.
+- `npm test`: neun API-Client-Tests erfolgreich, einschließlich POST-Inhalt, Abbruch, Netzwerkfehler, HTTP 409/422/502 und ungültiger Antworten.
+- `.venv/Scripts/python.exe -m pytest -q`: 40 Tests erfolgreich, eine bereits bekannte StarletteDeprecationWarning zu httpx/TestClient.
+- `.venv/Scripts/python.exe -m pip check`: keine beschädigten Abhängigkeiten gemeldet.
+- Im Browser leere Liste, Geräteerstellung, Anzeige fehlender Messdaten, Duplikat und ungültige Adresse geprüft. Nach Neuladen blieb das Gerät sichtbar.
+- Backend für Fehlerprüfung beendet: Listendaten blieben sichtbar, HTTP-502-Meldung erschien. Nach Backend-Neustart und erneuter Listenaktualisierung verschwand die Fehlermeldung.
+- Für Browserprüfung eigene SQLite-Datei `.pytest_cache/ui-stage3.sqlite3` verwendet; Arbeitsdatenbank nicht mit Testgeräten befüllt. Beide Testserver anschließend beendet.
+- Responsive CSS implementiert; keine gesonderte mobile Browserprüfung und keine automatisierten React-Komponententests durchgeführt.
+- Keine Abhängigkeiten installiert, keine Backend-Quellen geändert, kein Ping, keine automatische Überwachung, kein Commit und kein Push.
+
+Aktueller Status: Etappe 3 umgesetzt und geprüft. Nächster Schritt: Benutzerprüfung, danach Detailplanung und Freigabe für Etappe 4 einschließlich erlaubter Zieladressen.

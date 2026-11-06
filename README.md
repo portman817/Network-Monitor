@@ -1,6 +1,6 @@
 # Network Monitor
 
-Lernprojekt mit Python, FastAPI, React und Vite. Etappe 1 umfasst das Oberflächengrundgerüst und `GET /api/health` mit der Antwort `{"status":"ok"}`. Etappe 2 ergänzt SQLite-Gerätespeicherung und REST-API. Ping und automatische Überwachung sind noch nicht implementiert.
+Lernprojekt mit Python, FastAPI, React und Vite. Etappe 1 umfasst das Oberflächengrundgerüst und `GET /api/health` mit der Antwort `{"status":"ok"}`. Etappe 2 ergänzt SQLite-Gerätespeicherung und REST-API. Etappe 3 bietet die React-Oberfläche zum Anzeigen und Hinzufügen von Geräten. Ping und automatische Überwachung sind noch nicht implementiert.
 
 ## Projektdokumentation
 
@@ -144,3 +144,20 @@ Ab Projektwurzel ausführen:
 ```
 
 Tests verwenden temporäre SQLite-Dateien und TestClient ohne externe Server. Sie prüfen Modellvorgaben, Persistenz zwischen Anwendungsinstanzen, Adressvalidierung, Duplikate einschließlich konkurrierender Anfragen sowie `/api/health`. Am 6. November 2026: 40 Tests erfolgreich, `pip check` ohne Konflikte. Starlette meldet eine Abkündigungswarnung zur Verwendung von httpx mit TestClient; ein Wechsel zu httpx2 wurde nicht durchgeführt.
+
+## Geräteoberfläche verwenden
+
+Nach dem Start von Backend und Frontend zeigt die Seite die gespeicherten Geräte. Über das Formular Name und IP-Adresse oder Domänenname eingeben und das Gerät hinzufügen. Die Liste aktualisiert sich nach dem Speichern automatisch. Die Schaltfläche zur Listenaktualisierung ermöglicht einen erneuten Abruf bei Verbindungsproblemen.
+
+Fehlende Latenz und Prüfzeit werden als fehlende Daten angezeigt; neue Geräte haben den unbekannten Status. Doppelte Adressen und ungültige Eingaben erzeugen verständliche Meldungen, ohne die Eingabefelder zu leeren. Während des Speicherns ist das Formular gesperrt.
+
+Zusätzliche Frontend-Dateien: `src/api/devices.js`, `src/api/devices.test.js`, `src/components/DeviceForm.jsx` und `src/components/DeviceList.jsx`.
+
+API-Client-Tests ohne zusätzliche Pakete im Verzeichnis `frontend` ausführen:
+
+```powershell
+npm test
+npm run build
+```
+
+Am 6. November 2026: neun API-Client-Tests und 40 Backend-Tests erfolgreich; Frontend-Build erfolgreich. Browserprüfung: leere Liste, Erstellung, Duplikat, ungültige Adresse, erneutes Laden sowie Verbindungsfehler und Wiederherstellung geprüft. Testgeräte wurden ausschließlich in `.pytest_cache/ui-stage3.sqlite3` gespeichert. Die Testserver wurden danach beendet. Eine gesonderte mobile Browserprüfung und automatisierte React-Komponententests wurden nicht durchgeführt.

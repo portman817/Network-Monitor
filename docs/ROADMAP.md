@@ -36,14 +36,40 @@ Status: Implementierung vom Benutzer freigegeben; Installation von SQLAlchemy, p
 
 Ping, automatische Überwachung und neue React-Komponenten gehören nicht zu dieser Etappe. `/api/health` bleibt unverändert.
 
-## Weitere Etappen – noch abzugleichen
+## Etappe 3 – React-Geräteoberfläche: abgeschlossen
 
-Ein bestätigter vollständiger Etappenplan nach Etappe 2 ist weder im Repository noch in der verfügbaren Gesprächshistorie enthalten. Weitere Nummern, Termine und Funktionen werden deshalb nicht als vereinbart dargestellt.
+Vom Benutzer am 6. November 2026 freigegeben.
 
-- [ ] Früheren Gesamtplan mit dem Benutzer abgleichen und ergänzen.
-- [ ] Reihenfolge und Umfang späterer Netzwerkprüfungen, automatischer Überwachung und Frontend-Erweiterungen bestätigen.
-- [ ] Vor Netzwerkprüfungen die Beschränkung auf erlaubte Adressen konkret festlegen.
+- [x] Geräte über `GET /api/devices` laden und tabellarisch anzeigen.
+- [x] Formular für Name und Adresse mit `POST /api/devices` bereitstellen.
+- [x] Fehlende Messwerte kenntlich machen; unbekannten Status anzeigen.
+- [x] Ladezustand, leere Liste, Validierungsfehler und doppelte Adressen behandeln.
+- [x] Mehrfache Formularübermittlung während des Speicherns verhindern.
+- [x] Liste nach erfolgreicher Erstellung aktualisieren; Wiederholung fehlgeschlagener Abrufe ermöglichen.
+- [x] Frontend-Build, neun API-Client-Tests und 40 Backend-Tests erfolgreich ausführen.
+- [x] Browserprüfung mit isolierter Testdatenbank durchführen und Dokumentation aktualisieren.
+
+## Etappe 4 – ICMP Ping, Latenzmessung und Statusaktualisierung: geplant
+
+- [ ] Vor Implementierungsbeginn den konkreten Umfang abstimmen und freigeben lassen.
+- [ ] Erlaubte Zieladressen und deren Durchsetzung vor Netzwerkprüfungen festlegen.
+- [ ] ICMP Ping und Latenzmessung implementieren.
+- [ ] Status und Prüfzeitpunkt nach definierter UTC-Konvention aktualisieren.
+- [ ] Erfolg, Nichterreichbarkeit und technische Fehler testen.
+
+## Etappe 5 – Fehlerbehandlung, Oberflächenverbesserungen und Tests: geplant
+
+- [ ] Fehlerbehandlung vervollständigen.
+- [ ] Oberfläche anhand der bisherigen Ergebnisse verbessern.
+- [ ] Tests erweitern und ausführen.
+
+## Etappe 6 – Abschlussprüfung und Dokumentation: geplant
+
+- [ ] Gesamte Anwendung und Zusammenspiel ihrer Komponenten prüfen.
+- [ ] Dokumentation, Startanleitung und bekannte Einschränkungen abschließend aktualisieren.
+
+Die Reihenfolge der Etappen 3 bis 6 ist vom Benutzer bestätigt. Automatische periodische Überwachung ist dadurch nicht zusätzlich freigegeben.
 
 ## Unmittelbarer nächster Schritt
 
-Ergebnisse der Etappe 2 mit dem Benutzer prüfen und den weiteren Etappenplan abstimmen. Keine zusätzlichen Überwachungsfunktionen ohne neue Freigabe beginnen. Der Persistenznachweis erfolgte durch zwei getrennte Anwendungsinstanzen mit geschlossenen und neu geöffneten Datenbankverbindungen, ohne externe Serverprozesse.
+Ergebnisse von Etappe 3 mit dem Benutzer prüfen. Anschließend Etappe 4 planen, erlaubte Zieladressen und Prüfverhalten abstimmen und Implementierungsfreigabe einholen. Keine Netzwerkprüfungen allein aufgrund eines gespeicherten Geräteeintrags ausführen.

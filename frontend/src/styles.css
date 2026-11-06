@@ -9,8 +9,8 @@ body {
 }
 
 main {
-  max-width: 760px;
-  margin: 64px auto;
+  max-width: 1100px;
+  margin: 40px auto;
   padding: 24px;
 }
 
@@ -20,4 +20,40 @@ h1 {
 
 p {
   line-height: 1.6;
+}
+
+* { box-sizing: border-box; }
+h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 8px 0; }
+h2 { font-size: 1.25rem; margin: 0 0 20px; }
+header { margin-bottom: 28px; }
+.eyebrow { color: #265bb4; font-weight: 600; margin: 0; }
+.muted { color: #526079; }
+.panel { background: white; border: 1px solid #dce3ed; border-radius: 14px; padding: 24px; margin-bottom: 24px; }
+fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.form-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+label { display: flex; flex-direction: column; gap: 8px; font-weight: 600; }
+input { width: 100%; min-width: 0; padding: 12px; border: 1px solid #9daac0; border-radius: 7px; font: inherit; }
+button { padding: 12px 18px; border: 1px solid #265bb4; border-radius: 7px; background: #265bb4; color: white; font: inherit; font-weight: 600; cursor: pointer; }
+button:disabled { opacity: .6; cursor: wait; }
+button.secondary { background: white; color: #265bb4; }
+:focus-visible { outline: 3px solid #bc7600; outline-offset: 3px; }
+.error { color: #a72121; background: #fff1f0; padding: 12px; border-radius: 7px; }
+.success { color: #17633c; }
+.success:empty { margin: 0; }
+.section-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+.section-heading h2 { margin: 0; }
+.count { font-size: .9rem; color: #526079; margin-left: 6px; }
+.table-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; text-align: left; }
+th, td { padding: 14px 12px; border-bottom: 1px solid #e2e8f0; overflow-wrap: anywhere; }
+th { color: #526079; font-size: .85rem; background: #f7f9fc; }
+td { min-width: 120px; max-width: 280px; }
+.address { font-family: ui-monospace, monospace; }
+.badge { display: inline-block; background: #edf1f7; color: #394960; padding: 4px 10px; border-radius: 20px; font-size: .85rem; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 640px) {
+  main { margin: 12px auto; padding: 16px; }
+  .panel { padding: 18px; }
+  .form-fields { grid-template-columns: 1fr; }
+  .section-heading { align-items: flex-start; flex-direction: column; }
 }
