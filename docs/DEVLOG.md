@@ -110,3 +110,20 @@ Aktueller Status: Etappe 4 implementiert und geprüft. Nächster Schritt: Benutz
 - Keine Frontend-Quellen, keine Datenbankschemata und keine Ping-Freigaben verändert. Keine Abhängigkeiten installiert, keine realen Netzwerkprüfungen, kein Commit und kein Push.
 
 Aktueller Status: Nur die drei beauftragten Fehlerkorrekturen aus Etappe 5 umgesetzt. Lokalisierung und weitere Verbesserungen bleiben offen.
+
+
+## 6. November 2026 – Etappe 5 abgeschlossen
+
+- Vor Beginn Agentenregeln, aktuelle Anforderungen, Entwicklungsplan, Journal, README, betroffene Quellen und sauberen Git-Status geprüft. Benutzerfreigabe für den vorgeschlagenen Umfang erhalten.
+- Englisches Wörterbuch und i18n-Zugriff eingeführt; russische UI-Zeichenketten aus Komponenten und API-Client entfernt. Englische Standardsprache, Rückfall, Parameterersetzung und passende Datums-/Zahlenformatierung getestet. Deutsche/russische Vollübersetzungen und Sprachauswahl bleiben offen.
+- Zehn Sekunden Anfragezeitrahmen einschließlich Antwortinhalt, strukturierte API-Fehler, Feldmeldungen und Retry-After-Verarbeitung ergänzt. Unklare Schreibresultate werden nicht automatisch wiederholt.
+- Backend-Fehler bei Datenbankzugriffen vereinheitlicht und durch drei zusätzliche Tests abgesichert. Sicherheitsregeln und Gesundheitsendpunkt unverändert.
+- Unterschiedliche Statusdarstellung, gesperrte verbotene Ziele und Abkühlzeit ergänzt. Listenaktualisierung prüft die Backend-Verbindung erneut.
+- Automatische Prüfung: 91 Backend-Tests erfolgreich, eine bekannte StarletteDeprecationWarning. 31 Frontend-Tests erfolgreich, einschließlich API-Client, Zeitüberschreitungen, i18n und statischen React-Komponenten. Frontend-Build erfolgreich, 21 Module; pip check ohne Konflikte.
+- Browser mit isolierter SQLite-Datei `.pytest_cache/stage5-ui.sqlite3`: englische Oberfläche, leere Liste, Feldfehler mit erhaltenen Eingaben, erfolgreiche Erstellung, reale ICMP-Prüfung ausschließlich zu `127.0.0.1` und deaktivierte externe Ziele bestätigt. Bei abgeschaltetem Backend blieben Daten sichtbar; nach Neustart und Aktualisierung erschienen wieder verbundener Status und Geräteliste.
+- Darstellung bei 390 Pixel Breite geprüft: einspaltiges Formular und horizontal verschiebbare Tabelle. Temporäre Ansichtsgröße zurückgesetzt und beide Testserver beendet.
+- Bei der Prüfung festgestellt: Feldfehlermeldung innerhalb eines Labels verändert dessen zugänglichen Namen. Meldungen außerhalb des Labels mit aria-describedby verknüpft; Frontend-Tests und Build danach erneut erfolgreich.
+- Änderungen mit ponytail-review geprüft: API-Verträge, Aufrufer, Tests, Schreibantworten, Abbruch und Loopback-Grenze geprüft. Nach Korrektur keine weiteren konkreten blockierenden Befunde festgestellt. Keine automatisierten interaktiven Browsertests; Komponententests prüfen statische Ausgabe.
+- Keine neuen Abhängigkeiten, keine automatische Überwachung, kein Commit und kein Push.
+
+Nächster Schritt: Benutzerprüfung und Freigabe der Etappe 6 zur Abschlussprüfung und Dokumentation.

@@ -1,53 +1,81 @@
-export async function requestDevices(options = {}, url = '/api/devices') {
-  let response;
+import { t } from '../i18n/index.js';
+
+export const REQUEST_TIMEOUT_MS = 10000;
+export class ApiError extends Error {
+  constructor(code, { status = 0, fields = {}, retryAfter = 0 } = {}) {
+    super(t(code, { status }) === code ? t('request_failed', { status }) : t(code, { status }));
+    this.code = code;
+    this.status = status;
+    this.fields = fields;
+    this.retryAfter = retryAfter;
+  }
+}
+
+export function retryAfterSeconds(value, now = Date.now()) {
+  if (!value) return 5;
+  const seconds = /^\d+$/.test(value) ? Number(value) : (Date.parse(value) - now) / 1000;
+  return Number.isFinite(seconds) ? Math.min(3600, Math.max(1, Math.ceil(seconds))) : 5;
+}
+
+export async function requestDevices(options = {}, url = '/api/devices', timeoutMs = REQUEST_TIMEOUT_MS) {
+  const timeout = AbortSignal.timeout(timeoutMs);
+  const signal = options.signal ? AbortSignal.any([options.signal, timeout]) : timeout;
   try {
-    response = await fetch(url, options);
+    const response = await fetch(url, { ...options, signal });
+    let data;
+    try { data = await response.json(); } catch (error) {
+      if (signal.aborted) throw error;
+      if (response.ok) throw new ApiError('invalid_response');
+    }
+    if (!response.ok) {
+      const detail = data?.detail;
+      const fields = {};
+      if (Array.isArray(detail)) {
+        for (const item of detail) {
+          const field = item.loc?.[0] === 'body' ? item.loc[1] : null;
+          if (field === 'name' || field === 'address') fields[field] = t(`invalid_${field}`);
+        }
+      }
+      let code = detail?.code;
+      if (!code) code = response.status === 409 && !url.endsWith('/check') ? 'duplicate_address'
+        : response.status === 422 ? 'validation_error' : 'request_failed';
+      throw new ApiError(code, { status: response.status, fields,
+        retryAfter: response.status === 429 ? retryAfterSeconds(response.headers.get('Retry-After')) : 0 });
+    }
+    return data;
   } catch (error) {
-    if (error.name === 'AbortError') throw error;
-    throw new Error('Нет соединения с backend. Проверьте подключение и повторите попытку.');
+    if (options.signal?.aborted) throw new DOMException('Aborted', 'AbortError');
+    if (timeout.aborted) throw new ApiError('request_timeout');
+    if (error instanceof ApiError) throw error;
+    throw new ApiError('network_error');
   }
-  if (!response.ok) {
-    if (url.endsWith('/check')) {
-      const messages = {
-        target_forbidden: 'Проверка разрешена только для 127.0.0.1. Другие адреса и домены запрещены.',
-        device_not_found: 'Устройство не найдено. Обновите список.',
-        check_in_progress: 'Проверка этого устройства уже выполняется.',
-        check_rate_limited: 'Подождите 5 секунд и повторите проверку.',
-        ping_process_timeout: 'Превышено время работы инструмента проверки. Предыдущие данные сохранены.',
-        platform_unsupported: 'ICMP-проверки пока поддерживаются только в Windows.',
-        storage_unavailable: 'Не удалось сохранить результат проверки.',
-      };
-      let code;
-      try { code = (await response.json()).detail?.code; } catch { /* Non-JSON proxy response. */ }
-      throw new Error(messages[code] ?? `Не удалось выполнить проверку (HTTP ${response.status}). Предыдущие данные сохранены.`);
-    }
-    if (response.status === 409) throw new Error('Устройство с таким адресом уже существует.');
-    if (response.status === 422) {
-      throw new Error('Проверьте название и адрес: укажите IP-адрес или доменное имя без протокола, порта и пути.');
-    }
-    throw new Error(`Не удалось выполнить запрос (HTTP ${response.status}). Повторите попытку.`);
-  }
-  try {
-    return await response.json();
-  } catch {
-    throw new Error('Backend вернул некорректный ответ. Повторите попытку.');
-  }
+}
+
+function validateDevice(device) {
+  if (!device || !Number.isSafeInteger(device.id) || typeof device.name !== 'string'
+    || typeof device.address !== 'string' || !['unknown', 'online', 'offline'].includes(device.status)
+    || !(device.latency_ms === null || (Number.isFinite(device.latency_ms) && device.latency_ms >= 0))
+    || !(device.last_checked_at === null || (typeof device.last_checked_at === 'string'
+      && !Number.isNaN(Date.parse(device.last_checked_at))))) throw new ApiError('invalid_response');
+  return device;
 }
 
 export async function getDevices(signal) {
   const devices = await requestDevices({ signal });
-  if (!Array.isArray(devices)) throw new Error('Backend вернул некорректный список устройств.');
-  return devices;
+  if (!Array.isArray(devices)) throw new ApiError('invalid_response');
+  return devices.map(validateDevice);
 }
 
-export function addDevice(device) {
-  return requestDevices({
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(device),
-  });
+export async function addDevice(device) {
+  return validateDevice(await requestDevices({ method: 'POST',
+    headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(device) }));
 }
 
-export function checkDevice(id) {
-  return requestDevices({ method: 'POST' }, `/api/devices/${id}/check`);
+export async function checkDevice(id) {
+  return validateDevice(await requestDevices({ method: 'POST' }, `/api/devices/${id}/check`));
+}
+
+export async function getHealth(signal) {
+  const data = await requestDevices({ signal }, '/api/health');
+  if (data?.status !== 'ok') throw new ApiError('invalid_response');
 }

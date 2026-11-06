@@ -59,13 +59,13 @@ Vom Benutzer am 6. November 2026 freigegeben.
 
 Freigabe: ausschließlich `127.0.0.1`; manuelle Einzelprüfung unter Windows. Statuswerte `unknown`, `online`, `offline`. 79 Backend-Tests, 16 Frontend-Tests und Frontend-Build erfolgreich; realer Loopback-Test samt Persistenzprüfung erfolgreich.
 
-## Etappe 5 – Fehlerbehandlung, Oberflächenverbesserungen und Tests: teilweise umgesetzt
+## Etappe 5 – Fehlerbehandlung, Oberflächenverbesserungen und Tests: abgeschlossen
 
 - [x] Drei bestätigte P2-Befunde gezielt beheben: Lesen nach Commit, Nullzeichen im Gerätenamen und Überlauf der Geräte-ID; Regressionstests vor und nach den Korrekturen ausführen.
-- [ ] Weitere Fehlerbehandlung nach gesonderter Umfangsabstimmung vervollständigen.
-- [ ] Oberfläche anhand der bisherigen Ergebnisse verbessern.
-- [ ] Separate Lokalisierungsaufgabe: i18n-Architektur mit getrennten Übersetzungswörterbüchern vorsehen, vorhandene Oberflächentexte aus Komponenten und API-Client auslagern und Englisch als Standardsprache einführen. Künftige Unterstützung für Englisch (`en`), Deutsch (`de`) und Russisch (`ru`) berücksichtigen; technische API-Werte und Identifikatoren unverändert lassen. Umsetzung noch ausstehend, derzeit nur dokumentiert.
-- [ ] Tests erweitern und ausführen.
+- [x] Weitere Fehlerbehandlung vervollständigen: strukturierte Datenbankfehler, Feldfehler, Anfragezeitrahmen und Wiederholung.
+- [x] Oberfläche verbessern: unterscheidbare Statusanzeigen, Abkühlzeit, Erklärung verbotener Ziele und schmaler Bildschirm.
+- [x] Separate Lokalisierungsaufgabe: i18n-Architektur mit getrennten Übersetzungswörterbüchern vorsehen, vorhandene Oberflächentexte aus Komponenten und API-Client auslagern und Englisch als Standardsprache einführen. Künftige Unterstützung für Englisch (`en`), Deutsch (`de`) und Russisch (`ru`) berücksichtigen; technische API-Werte und Identifikatoren unverändert lassen. Englisches Wörterbuch und Rückfall auf Englisch implementiert; vollständige deutsche und russische Übersetzungen sowie Sprachauswahl bleiben einer späteren Freigabe vorbehalten.
+- [x] Tests erweitern und ausführen: 91 Backend-Tests und 31 Frontend-Tests sowie Build erfolgreich. Browserprüfung und Prüfung der Änderungen nach ponytail-review durchgeführt.
 
 ## Etappe 6 – Abschlussprüfung und Dokumentation: geplant
 
@@ -76,4 +76,4 @@ Die Reihenfolge der Etappen 3 bis 6 ist vom Benutzer bestätigt. Automatische pe
 
 ## Unmittelbarer nächster Schritt
 
-Die drei gezielten P2-Korrekturen sind umgesetzt und geprüft. Den verbleibenden Umfang von Etappe 5 einschließlich Lokalisierung mit dem Benutzer abstimmen. Keine Netzwerkprüfungen allein aufgrund eines gespeicherten Geräteeintrags ausführen.
+Etappe 5 ist umgesetzt und geprüft. Ergebnisse mit dem Benutzer besprechen und Freigabe für die Abschlussprüfung in Etappe 6 einholen. Keine Netzwerkprüfungen allein aufgrund eines gespeicherten Geräteeintrags ausführen.

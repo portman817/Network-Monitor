@@ -32,7 +32,7 @@ def create_device(payload: DeviceCreate, session: DatabaseSession):
     except IntegrityError:
         session.rollback()
         if session.scalar(select(Device.id).where(Device.address == payload.address)) is not None:
-            raise HTTPException(status_code=409, detail="Device address already exists") from None
+            raise HTTPException(status_code=409, detail={"code": "duplicate_address"}) from None
         raise
     return response
 

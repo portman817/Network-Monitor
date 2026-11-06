@@ -1,6 +1,6 @@
 # Network Monitor
 
-Lernprojekt mit Python, FastAPI, React und Vite. Etappe 1 umfasst das Oberflächengrundgerüst und `GET /api/health` mit der Antwort `{"status":"ok"}`. Etappe 2 ergänzt SQLite-Gerätespeicherung und REST-API. Etappe 3 bietet die React-Oberfläche zum Anzeigen und Hinzufügen von Geräten. Etappe 4 ergänzt manuelle ICMP-Prüfungen ausschließlich für `127.0.0.1` unter Windows. Automatische Überwachung ist nicht implementiert.
+Lernprojekt mit Python, FastAPI, React und Vite. Etappe 1 umfasst das Oberflächengrundgerüst und `GET /api/health` mit der Antwort `{"status":"ok"}`. Etappe 2 ergänzt SQLite-Gerätespeicherung und REST-API. Etappe 3 bietet die React-Oberfläche zum Anzeigen und Hinzufügen von Geräten. Etappe 4 ergänzt manuelle ICMP-Prüfungen ausschließlich für `127.0.0.1` unter Windows. Etappe 5 ergänzt englische Oberflächentexte, i18n-Grundlage und verbesserte Fehlerbehandlung. Automatische Überwachung ist nicht implementiert.
 
 ## Projektdokumentation
 
@@ -80,7 +80,7 @@ Invoke-RestMethod http://127.0.0.1:8000/api/health
 Invoke-RestMethod http://127.0.0.1:5173/api/health
 ```
 
-Beide Anfragen sollen `status` mit dem Wert `ok` liefern. Die erste prüft FastAPI direkt, die zweite den Vite-Proxy. Die Oberfläche soll den Projektnamen und eine erfolgreiche Verbindung anzeigen. Ihre vorhandenen Meldungen sind russisch.
+Beide Anfragen sollen `status` mit dem Wert `ok` liefern. Die erste prüft FastAPI direkt, die zweite den Vite-Proxy. Die Oberfläche soll den Projektnamen und eine erfolgreiche Verbindung anzeigen. Die Oberfläche verwendet standardmäßig Englisch.
 
 Backend mit Ctrl+C beenden und die Seite neu laden: Eine verständliche Verbindungsfehlermeldung soll erscheinen. Nach erneutem Backend-Start und Neuladen soll die Verbindung wieder als erfolgreich angezeigt werden.
 
@@ -178,3 +178,13 @@ Aktuelle Prüfung am 6. November 2026: 79 Backend-Tests, 16 Frontend-Tests und `
 Gerätenamen mit Nullzeichen werden mit `422` zurückgewiesen. Der Prüf-Endpunkt akzeptiert Geräte-IDs von `1` bis `9223372036854775807`; außerhalb dieses Bereichs liefert er `422`. Antworten nach Geräteerstellung und Prüfung benötigen nach erfolgreichem Commit keinen weiteren Datenbanklesezugriff.
 
 Prüfung am 6. November 2026: neun neue Regressionstests zunächst mit acht erwarteten Fehlern und einer erfolgreichen Grenzprüfung ausgeführt; nach Korrektur alle erfolgreich. Insgesamt 88 Backend-Tests und 16 Frontend-Tests erfolgreich, Frontend-Build und `pip check` erfolgreich. Die bekannte Starlette-Abkündigungswarnung besteht weiter.
+
+## Oberfläche und Fehlerbehandlung ab Etappe 5
+
+Die Oberfläche ist englisch. Texte stehen in `frontend/src/i18n/en.js`; Übersetzungszugriff und Datums-/Zahlenformatierung in `frontend/src/i18n/index.js`. Weitere Wörterbücher für Deutsch und Russisch und eine Sprachauswahl sind für später vorbereitet, aber noch nicht umgesetzt.
+
+Fehlerhafte Felder werden direkt gekennzeichnet; Eingaben und vorhandene Messdaten bleiben bei Fehlern erhalten. Anfragen haben einen Zeitrahmen von zehn Sekunden. Bei einer unklaren Schreibantwort zuerst die Liste aktualisieren, bevor erneut gespeichert wird. Eine Listenaktualisierung prüft auch die Verbindung zum Backend erneut.
+
+Prüfschaltflächen zeigen Wartezeiten an und sind für alle Ziele außer `127.0.0.1` mit Erklärung deaktiviert. Die Sicherheitsbeschränkung im Backend bleibt unverändert. Auf schmalen Bildschirmen ist die Tabelle horizontal verschiebbar.
+
+Prüfung vom 6. November 2026: 91 Backend-Tests, 31 Frontend-Tests, `npm run build` und `pip check` erfolgreich. Browserprüfung mit separater Testdatenbank `.pytest_cache/stage5-ui.sqlite3`: Feldfehler, Erstellung, ICMP ausschließlich zu Loopback, verbotene Ziele, 390-Pixel-Ansicht und Verbindungswiederherstellung geprüft. Testserver beendet; bekannte Starlette-Warnung bleibt bestehen.

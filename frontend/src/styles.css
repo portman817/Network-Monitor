@@ -57,3 +57,9 @@ td { min-width: 120px; max-width: 280px; }
   .form-fields { grid-template-columns: 1fr; }
   .section-heading { align-items: flex-start; flex-direction: column; }
 }
+
+.field-error { color: #a72121; font-size: .9rem; font-weight: 400; }
+input[aria-invalid="true"] { border-color: #a72121; }
+.status-online { color: #155b35; background: #e6f5eb; }
+.status-offline { color: #942525; background: #fff0ee; }
+.status-unknown { color: #715215; background: #fff5d9; }

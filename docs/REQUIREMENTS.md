@@ -39,7 +39,7 @@ Network Monitor ist ein Lernprojekt zur Verwaltung von Netzwerkgeräten und zur 
 - Benutzeroberfläche standardmäßig auf Englisch. Die Oberflächensprache ist unabhängig von der Kommunikations- und Dokumentationssprache.
 - Eine i18n-Architektur mit separaten Übersetzungswörterbüchern vorsehen. Künftig Englisch (`en`), Deutsch (`de`) und Russisch (`ru`) unterstützen; keine russischen Zeichenketten direkt in React-Komponenten hinzufügen.
 - Technische API-Werte, Variablennamen und Identifikatoren bleiben englisch und unverändert, insbesondere `unknown`, `online`, `offline` und Fehlercodes. Ihre sichtbaren Beschriftungen dürfen über Wörterbücher übersetzt werden.
-- Bestehende russische Oberflächentexte sind noch nicht umgestellt. Die Auslagerung der Texte, englische Standardsprache und spätere Sprachunterstützung sind eine offene Lokalisierungsaufgabe; diese Dokumentationsänderung implementiert noch keine i18n-Funktion.
+- Oberflächentexte sind seit Etappe 5 im separaten englischen Wörterbuch `frontend/src/i18n/en.js` hinterlegt. `i18n/index.js` übernimmt Übersetzung, Parameterersetzung und Formatierung. Englisch ist Standard und Rückfallsprache; vollständige deutsche und russische Wörterbücher sowie eine Sprachauswahl sind noch nicht implementiert.
 
 ## Architektur
 
@@ -57,7 +57,7 @@ Getrennte Module für Datenbank und Sitzungen, SQLAlchemy-Modell, Pydantic-Schem
 
 ## Grenzen der ersten Version
 
-Etappen 1 bis 4 sind umgesetzt. Die bestätigte weitere Reihenfolge lautet: Etappe 4 ICMP Ping, Latenzmessung und Statusaktualisierung; Etappe 5 Fehlerbehandlung, Oberflächenverbesserungen und Tests; Etappe 6 Abschlussprüfung und Dokumentation. Etappe 4 wurde mit Beschränkung auf die Loopback-Adresse freigegeben und umgesetzt.
+Etappen 1 bis 5 sind umgesetzt. Die bestätigte weitere Reihenfolge lautet: Etappe 4 ICMP Ping, Latenzmessung und Statusaktualisierung; Etappe 5 Fehlerbehandlung, Oberflächenverbesserungen und Tests; Etappe 6 Abschlussprüfung und Dokumentation. Etappe 4 wurde mit Beschränkung auf die Loopback-Adresse freigegeben und umgesetzt.
 
 Etappe 2 enthält kein Ping, keine automatische Überwachung und keine neuen React-Komponenten. Authentifizierung, Alarmierung, Messwerthistorie und produktive Bereitstellung sind bislang nicht als verbindlicher Funktionsumfang bestätigt.
 
@@ -119,3 +119,14 @@ Python, FastAPI, React und Vite bilden die technische Grundlage. SQLite und SQLA
 - Gerätenamen dürfen kein Nullzeichen (`U+0000`) enthalten. Die Eingabe wird unabhängig von der Zeichenposition vor dem Datenbankzugriff mit `422` abgelehnt; die übrigen Namensregeln bleiben erhalten.
 - `device_id` im Prüf-Endpunkt ist auf `1` bis `9223372036854775807` begrenzt. Werte außerhalb dieses Bereichs liefern `422` vor Datenbank- oder Ping-Zugriff. Eine gültige, nicht vorhandene ID liefert weiterhin `404`.
 - Beim Erstellen und beim Speichern von Prüfergebnissen erfolgt zunächst `flush`, danach wird eine eigenständige Antwort aus den geladenen Werten aufgebaut. Erst nach erfolgreichem `commit` wird diese zurückgegeben. Nach dem Commit sind weder `refresh` noch erneutes Laden abgelaufener ORM-Attribute für die Antwort erforderlich. Ein fehlgeschlagener Lesezugriff nach erfolgreicher Speicherung kann dadurch keine irreführende Fehlermeldung mehr auslösen.
+
+## Etappe 5 – Fehlerbehandlung und Oberfläche
+
+- Einheitliche maschinenlesbare Codes für Duplikate und Datenbankfehler; `422` behält die FastAPI-Feldinformationen in `detail`. SQLAlchemy-Fehler in Geräteabruf und Erstellung liefern `503` ohne interne Diagnosen. `/api/health` bleibt unverändert.
+- API-Client begrenzt Anfragen einschließlich Antwortinhalt auf zehn Sekunden über AbortSignal. Nach einer Zeitüberschreitung kann ein Schreibvorgang bereits erfolgt sein; die Meldung fordert zur Listenaktualisierung auf. Keine automatischen Wiederholungen schreibender Anfragen.
+- Feldfehler werden bei Name und Adresse angezeigt und mit `aria-describedby` verknüpft; Eingaben bleiben bei Fehlern erhalten. Ungültige erfolgreiche Geräteantworten werden vor der Anzeige abgelehnt.
+- `Retry-After` wird als Sekundenwert oder HTTP-Datum ausgewertet; die Prüfschaltfläche zeigt eine Abkühlzeit. Nach erfolgreicher Prüfung wird vorsichtig fünf Sekunden gewartet. Die Backend-Begrenzung bleibt maßgeblich.
+- Nicht freigegebene Ziele haben eine deaktivierte Prüfschaltfläche samt Erklärung. Die serverseitige Sicherheitsprüfung bleibt unverändert. Statuswerte haben unterschiedliche Farben und weiterhin Textbeschriftungen.
+- Die Listenaktualisierung prüft auch die Backend-Verbindung erneut. Bereits angezeigte Daten bleiben bei Abruffehlern erhalten; nach erfolgreicher Geräteprüfung wird der aktuelle Gesamtstand erneut geladen.
+- Formulare passen sich schmalen Bildschirmen an; die Tabelle ist horizontal verschiebbar und per Tastatur fokussierbar. Datum und Zahlen verwenden die aktive englische Sprache; das HTML-Sprachattribut lautet `en`.
+- Keine neuen Abhängigkeiten. Frontend-Tests verwenden den vorhandenen Node-Testläufer, Vite zum Laden von JSX und React zur statischen Komponentenausgabe. Dies ersetzt keine automatisierten interaktiven Browsertests.
