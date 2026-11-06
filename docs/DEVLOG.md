@@ -46,3 +46,18 @@ Diese Angaben sind übernommene historische Berichte, keine erneuten Prüfungen.
 Aktueller Status: Etappe 1 abgeschlossen, Dokumentationsgrundlage erstellt, Etappe 2 nicht begonnen.
 
 Nächster Schritt: Benutzerfreigabe für Etappe 2, technische Details und gesonderte Abhängigkeitsinstallation einholen; weiteren Gesamtplan abgleichen.
+
+
+## 6. November 2026 – Etappe 2 umgesetzt und geprüft
+
+- Benutzerfreigabe für die Implementierung erhalten; gesonderte Freigabe für Installation in das bestehende `.venv` erhalten.
+- SQLAlchemy `2.0.57`, pytest `9.2.0`, httpx `0.28.1` und deren Abhängigkeiten installiert. Die erste Installation scheiterte an der Netzwerkisolation; die freigegebene Wiederholung war erfolgreich.
+- SQLite-Modell, Sitzungen pro Anfrage, Anwendungsfabrik und Tabelleninitialisierung implementiert.
+- `GET /api/devices` und `POST /api/devices` mit Normalisierung, Syntaxprüfung und datenbankgestützter Eindeutigkeit implementiert. `/api/health` behält Antwort und Pfad.
+- 40 Tests über `.venv/Scripts/python.exe -m pytest -q` erfolgreich: Modellvorgaben, Datenbank-Eindeutigkeit, API, ungültige Eingaben, parallele Duplikate, Fehlerbehandlung und Persistenz über zwei Anwendungsinstanzen.
+- Persistenz wurde ohne externe Serverprozesse durch Schließen und erneutes Öffnen derselben temporären Datenbank geprüft. Es wurde kein manueller Neustart eines Uvicorn-Prozesses durchgeführt.
+- Testausgabe: `40 passed, 1 warning`. StarletteDeprecationWarning: TestClient kündigt die Verwendung von httpx ab und empfiehlt httpx2. Keine zusätzliche Bibliothek dafür installiert.
+- `.venv/Scripts/python.exe -m pip check`: `No broken requirements found.`
+- Keine Änderungen am Frontend, kein Ping, keine automatische Überwachung, kein Commit und kein Push.
+
+Aktueller Status: Etappe 2 umgesetzt und automatisiert geprüft. Nächster Schritt: Benutzerprüfung und Abstimmung des weiteren Etappenplans.

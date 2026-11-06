@@ -1,6 +1,6 @@
 # Network Monitor
 
-Lernprojekt mit Python, FastAPI, React und Vite. Etappe 1 umfasst das Oberflächengrundgerüst und `GET /api/health` mit der Antwort `{"status":"ok"}`. SQLite, Geräteverwaltung, Ping und automatische Überwachung sind noch nicht implementiert. Etappe 2 benötigt vor Beginn die Benutzerfreigabe.
+Lernprojekt mit Python, FastAPI, React und Vite. Etappe 1 umfasst das Oberflächengrundgerüst und `GET /api/health` mit der Antwort `{"status":"ok"}`. Etappe 2 ergänzt SQLite-Gerätespeicherung und REST-API. Ping und automatische Überwachung sind noch nicht implementiert.
 
 ## Projektdokumentation
 
@@ -91,7 +91,7 @@ Set-Location C:\Users\CC-Student\PycharmProjects\Network-Monitor\frontend
 npm run build
 ```
 
-Jeden Server mit Ctrl+C im jeweiligen Fenster beenden. Automatisierte Modell- und Geräte-API-Tests sind für Etappe 2 vorgesehen und noch nicht vorhanden.
+Jeden Server mit Ctrl+C im jeweiligen Fenster beenden. Automatisierte Modell- und Geräte-API-Tests sind vorhanden; Anleitung siehe unten.
 
 ## Struktur
 
@@ -115,3 +115,32 @@ frontend/
 .gitignore                # Git-Ausschlüsse
 README.md                 # Projektbeschreibung und Startanleitung
 ```
+
+## Geräteverwaltung und Speicherung
+
+`GET /api/devices` liefert eine nach `id` sortierte Liste; eine leere Datenbank liefert `[]`.
+
+`POST /api/devices` akzeptiert beispielsweise `{"name":"Router","address":"192.0.2.1"}` und liefert `201` mit `id`, `name`, `address`, `status`, `latency_ms` und `last_checked_at`. Anfangswerte sind `unknown`, `null` und `null`. Ungültige Eingaben liefern `422`, doppelte normalisierte Adressen `409`.
+
+Namen werden außen von Leerzeichen befreit und auf 1 bis 100 Zeichen begrenzt. IPv4, IPv6, Domänen einschließlich IDN und lokale einteilige Namen sind zulässig. IP-Adressen werden kanonisiert, Domänen kleingeschrieben und ein abschließender Punkt entfernt. Die Validierung führt keine DNS- oder anderen Netzwerkprüfungen aus.
+
+Die Anwendung erstellt beim Start `backend/data/network_monitor.sqlite3`. Der Pfad hängt nicht vom Arbeitsverzeichnis ab; Daten bleiben nach einem Neustart erhalten. Datenbankdateien sind von Git ausgeschlossen. `create_all` erstellt fehlende Tabellen, migriert jedoch keine bestehende Struktur. Gespeicherte Adressen sind keine automatische Erlaubnis für spätere Netzwerkprüfungen.
+
+Neue Module: `backend/app/database.py`, `models.py`, `schemas.py` und `routers/devices.py`. Die Anwendung bietet `create_app` zur isolierten Erstellung von Testinstanzen.
+
+## Automatisierte Tests
+
+SQLAlchemy ist in `backend/requirements.txt` enthalten. Testabhängigkeiten stehen in `backend/requirements-dev.txt`. Installation nur nach gesonderter Freigabe:
+
+```powershell
+& .\.venv\Scripts\python.exe -m pip install -r .\backend\requirements-dev.txt
+```
+
+Ab Projektwurzel ausführen:
+
+```powershell
+& .\.venv\Scripts\python.exe -m pytest -q
+& .\.venv\Scripts\python.exe -m pip check
+```
+
+Tests verwenden temporäre SQLite-Dateien und TestClient ohne externe Server. Sie prüfen Modellvorgaben, Persistenz zwischen Anwendungsinstanzen, Adressvalidierung, Duplikate einschließlich konkurrierender Anfragen sowie `/api/health`. Am 6. November 2026: 40 Tests erfolgreich, `pip check` ohne Konflikte. Starlette meldet eine Abkündigungswarnung zur Verwendung von httpx mit TestClient; ein Wechsel zu httpx2 wurde nicht durchgeführt.

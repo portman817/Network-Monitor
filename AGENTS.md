@@ -31,7 +31,7 @@
 
 ## Aktuelle Grenzen
 
-- Etappe 1 ist abgeschlossen; Etappe 2 benötigt vor der Implementierung die Benutzerfreigabe.
+- Etappen 1 und 2 sind umgesetzt. Weitere Etappen benötigen eine neue Aufgabenfreigabe; zusätzliche Installationen bleiben gesondert genehmigungspflichtig.
 - `GET /api/health` mit `{"status":"ok"}` unverändert erhalten.
 - Etappe 2 umfasst SQLite-Gerätespeicherung und Geräte-API, jedoch kein Ping, keine automatische Überwachung und keine neuen React-Komponenten.
 - Zukünftige Netzwerkprüfungen auf erlaubte Adressen beschränken. Ein gespeicherter Geräteeintrag allein bedeutet keine Prüferlaubnis.

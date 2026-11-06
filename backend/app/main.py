@@ -1,8 +1,31 @@
+from contextlib import asynccontextmanager
+from pathlib import Path
+
 from fastapi import FastAPI
 
-app = FastAPI(title="Network Monitor")
+from .database import Base, DEFAULT_DATABASE_PATH, build_engine
+from .routers.devices import router
 
 
-@app.get("/api/health")
 async def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+def create_app(database_path: Path | None = None) -> FastAPI:
+    @asynccontextmanager
+    async def lifespan(application: FastAPI):
+        engine = build_engine(database_path if database_path is not None else DEFAULT_DATABASE_PATH)
+        try:
+            Base.metadata.create_all(engine)
+            application.state.engine = engine
+            yield
+        finally:
+            engine.dispose()
+
+    application = FastAPI(title="Network Monitor", lifespan=lifespan)
+    application.add_api_route("/api/health", health, methods=["GET"])
+    application.include_router(router)
+    return application
+
+
+app = create_app()

@@ -10,8 +10,8 @@ Network Monitor ist ein Lernprojekt zur Verwaltung von Netzwerkgeräten und zur 
 | --- | --- | --- |
 | Backend | Python, FastAPI, Uvicorn, Pydantic | Vorhanden |
 | Frontend | React, React DOM, Vite | Vorhanden |
-| Speicherung | SQLite, SQLAlchemy | Für Etappe 2 vorgegeben; nicht implementiert |
-| Tests | pytest, httpx | Vorgeschlagen; nicht installiert |
+| Speicherung | SQLite, SQLAlchemy | Implementiert: SQLAlchemy 2.0.57 |
+| Tests | pytest, httpx | Installiert: pytest 9.2.0, httpx 0.28.1 |
 
 ## Funktionale Anforderungen
 
@@ -42,9 +42,9 @@ Network Monitor ist ein Lernprojekt zur Verwaltung von Netzwerkgeräten und zur 
 - Der Entwicklungsproxy verwendet denselben Ursprung; zusätzliche CORS-Konfiguration ist derzeit nicht erforderlich.
 - Die Produktionsbereitstellung mit Backend ist noch nicht eingerichtet.
 
-### Vorschlag für Etappe 2
+### Implementierte Erweiterung in Etappe 2
 
-Getrennte Module für Datenbank und Sitzungen, SQLAlchemy-Modell, Pydantic-Schemata und Geräte-Router; eine Sitzung pro Anfrage und eine dateibasierte SQLite-Datenbank. Diese Detailarchitektur benötigt noch Bestätigung.
+Getrennte Module für Datenbank und Sitzungen, SQLAlchemy-Modell, Pydantic-Schemata und Geräte-Router; eine Sitzung pro Anfrage und eine dateibasierte SQLite-Datenbank. Die Anwendung erzeugt die Tabellen beim Start über lifespan und schließt den Engine beim Beenden. Tests verwenden eigene temporäre Dateien.
 
 ## Grenzen der ersten Version
 
@@ -56,7 +56,7 @@ Etappe 2 enthält kein Ping, keine automatische Überwachung und keine neuen Rea
 
 Python, FastAPI, React und Vite bilden die technische Grundlage. SQLite und SQLAlchemy sind für Etappe 2 vorgegeben. Die Gerätefelder, der Anfangsstatus, beide Geräte-Endpunkte und die genannten Arbeitsbeschränkungen sind bestätigt.
 
-## Noch nicht bestätigte Vorschläge
+## Implementierungsentscheidungen der freigegebenen Etappe 2
 
 - Synchrones SQLAlchemy; Tabellenanlage über `create_all`, zunächst ohne Alembic. `create_all` ersetzt keine Migration bestehender Tabellen.
 - Datenbankpfad `backend/data/network_monitor.sqlite3`, unabhängig vom Arbeitsverzeichnis aufgelöst.
@@ -64,4 +64,6 @@ Python, FastAPI, React und Vite bilden die technische Grundlage. SQLite und SQLA
 - IPv4, IPv6, IDN-Domänen und einteilige lokale Namen; kanonische IP-Schreibweise, Domänen in Kleinbuchstaben, abschließenden Punkt entfernen.
 - Namen nach Entfernung äußerer Leerzeichen auf 100 Zeichen begrenzen.
 - Normalisierte Adressen in SQLite eindeutig speichern; HTTP-Antworten `201`, `409` und `422`; Geräteliste nach `id` sortieren.
-- Kompatible Versionen von SQLAlchemy, pytest und httpx auswählen und deren Installation gesondert freigeben lassen.
+- SQLAlchemy `2.0.57`, pytest `9.2.0` und httpx `0.28.1` nach gesonderter Installationsfreigabe installiert und in den Abhängigkeitsdateien fixiert.
+
+`last_checked_at` bleibt in Etappe 2 `NULL`; vor späteren Messungen ist die UTC-Konvention umzusetzen. IPv6-Zonenkennungen, URLs, Ports, Pfade und rein numerische ungültige IP-Schreibweisen werden abgelehnt. Zusätzliche Eingabefelder werden mit `422` abgelehnt. Die Datenbank erzwingt die Eindeutigkeit des normalisierten Adresswerts; bei Konflikten erfolgt ein Rollback und die API liefert `409`. IDN-Konvertierung verwendet den Python-Codec `idna`.

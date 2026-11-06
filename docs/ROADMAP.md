@@ -19,20 +19,20 @@ Historische Laufzeitprüfungen wurden bei der Dokumentationsarbeit nicht wiederh
 - [x] Agentenregeln, Anforderungen, Entwicklungsplan und Entwicklungsjournal anlegen.
 - [x] README auf Deutsch übertragen und mit der Dokumentation verknüpfen.
 
-## Etappe 2 – SQLite und Gerätespeicherung: als Nächstes
+## Etappe 2 – SQLite und Gerätespeicherung: abgeschlossen
 
-Status: Anforderungen bekannt; Implementierung und zusätzliche Installationen noch nicht freigegeben.
+Status: Implementierung vom Benutzer freigegeben; Installation von SQLAlchemy, pytest und httpx gesondert genehmigt. 40 Tests erfolgreich; Einzelheiten in DEVLOG.md.
 
-- [ ] Offene technische Entscheidungen bestätigen lassen.
-- [ ] Installation benötigter Abhängigkeiten gesondert genehmigen lassen.
-- [ ] SQLAlchemy und dateibasierte SQLite-Speicherung einrichten.
-- [ ] Gerätemodell mit `id`, `name`, `address`, `status`, `latency_ms` und `last_checked_at` implementieren.
-- [ ] Anfangsstatus `unknown` sicherstellen.
-- [ ] `GET /api/devices` und `POST /api/devices` implementieren.
-- [ ] IP-Adressen und Domänennamen validieren; doppelte Adressen behandeln.
-- [ ] Persistenz nach Backend-Neustart nachweisen.
-- [ ] Modell- und API-Tests implementieren und ausführen.
-- [ ] Dokumentation aktualisieren.
+- [x] Technische Details im Rahmen der freigegebenen Etappe festlegen und dokumentieren.
+- [x] Installation benötigter Abhängigkeiten gesondert genehmigen lassen.
+- [x] SQLAlchemy und dateibasierte SQLite-Speicherung einrichten.
+- [x] Gerätemodell mit `id`, `name`, `address`, `status`, `latency_ms` und `last_checked_at` implementieren.
+- [x] Anfangsstatus `unknown` sicherstellen.
+- [x] `GET /api/devices` und `POST /api/devices` implementieren.
+- [x] IP-Adressen und Domänennamen validieren; doppelte Adressen behandeln.
+- [x] Persistenz nach Backend-Neustart nachweisen.
+- [x] Modell- und API-Tests implementieren und ausführen.
+- [x] Dokumentation aktualisieren.
 
 Ping, automatische Überwachung und neue React-Komponenten gehören nicht zu dieser Etappe. `/api/health` bleibt unverändert.
 
@@ -46,4 +46,4 @@ Ein bestätigter vollständiger Etappenplan nach Etappe 2 ist weder im Repositor
 
 ## Unmittelbarer nächster Schritt
 
-Benutzerfreigabe für Etappe 2 und offene technische Entscheidungen einholen. Bis dahin keine Implementierung beginnen.
+Ergebnisse der Etappe 2 mit dem Benutzer prüfen und den weiteren Etappenplan abstimmen. Keine zusätzlichen Überwachungsfunktionen ohne neue Freigabe beginnen. Der Persistenznachweis erfolgte durch zwei getrennte Anwendungsinstanzen mit geschlossenen und neu geöffneten Datenbankverbindungen, ohne externe Serverprozesse.
