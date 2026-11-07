@@ -23,6 +23,7 @@ export async function requestDevices(options = {}, url = '/api/devices', timeout
   const signal = options.signal ? AbortSignal.any([options.signal, timeout]) : timeout;
   try {
     const response = await fetch(url, { ...options, signal });
+    if (response.status === 204) return;
     let data;
     try { data = await response.json(); } catch (error) {
       if (signal.aborted) throw error;
@@ -38,7 +39,7 @@ export async function requestDevices(options = {}, url = '/api/devices', timeout
         }
       }
       let code = detail?.code;
-      if (!code) code = response.status === 409 && !url.endsWith('/check') ? 'duplicate_address'
+      if (!code) code = response.status === 409 && url === '/api/devices' ? 'duplicate_address'
         : response.status === 422 ? 'validation_error' : 'request_failed';
       throw new ApiError(code, { status: response.status, fields,
         retryAfter: response.status === 429 ? retryAfterSeconds(response.headers.get('Retry-After')) : 0 });
@@ -74,6 +75,10 @@ export async function addDevice(device) {
 
 export async function checkDevice(id) {
   return validateDevice(await requestDevices({ method: 'POST' }, `/api/devices/${id}/check`));
+}
+
+export function deleteDevice(id) {
+  return requestDevices({ method: 'DELETE' }, `/api/devices/${id}`);
 }
 
 export async function getHealth(signal) {

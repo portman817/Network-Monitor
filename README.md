@@ -57,7 +57,7 @@ Ein Gerät mit Name und IP-Adresse oder Domänenname hinzufügen. Namen haben na
 
 Die SQLite-Datei `backend/data/network_monitor.sqlite3` wird beim Start erstellt; der absolute Pfad ist unabhängig vom Arbeitsverzeichnis. Geräte und Messwerte überstehen einen Neustart. Datenbankdateien sind von Git ausgeschlossen. `create_all` erstellt fehlende Tabellen, ersetzt aber keine Migration bestehender Schemata.
 
-Für reale ICMP-Prüfungen sind nur `127.0.0.1` und der Drucker `192.168.0.247` freigegeben. Die Freigabeliste steht in `backend/app/ping.py` unter `ALLOWED_ADDRESSES`. Das API-Feld `check_allowed` steuert die Prüfschaltfläche. Alle anderen Ziele einschließlich `localhost`, `::1` und Domänennamen sind verboten; die Speicherung eines Geräts erteilt keine Prüferlaubnis. Es erfolgt keine DNS-Auflösung.
+Ohne zusätzliche Netzfreigabe sind für reale ICMP-Prüfungen nur `127.0.0.1` und der Drucker `192.168.0.247` freigegeben. Die Freigabeliste steht in `backend/app/ping.py` unter `ALLOWED_ADDRESSES`. Das API-Feld `check_allowed` steuert die Prüfschaltfläche. Alle anderen Ziele einschließlich `localhost`, `::1` und Domänennamen sind verboten; die Speicherung eines Geräts erteilt keine Prüferlaubnis. Es erfolgt keine DNS-Auflösung.
 
 Eine manuelle Prüfung sendet einen Echo Request mit 1000 ms Antwortwartezeit. Der äußere Prozesswartezeitrahmen beträgt fünf Sekunden. Höchstens zwei Prüfungen je Prozess, keine gleichzeitige Prüfung derselben Geräte-ID und mindestens fünf Sekunden zwischen Prüfstarts. Die Oberfläche berücksichtigt Abkühlzeit und `Retry-After`.
 
@@ -69,6 +69,9 @@ Statuswerte: `unknown`, `online`, `offline`. Erfolg speichert Latenz und UTC-Zei
 | GET | `/api/devices` | Nach ID sortierte Geräteliste |
 | POST | `/api/devices` | Gerät aus `name` und `address` erstellen |
 | POST | `/api/devices/{id}/check` | Erlaubtes Gerät manuell prüfen |
+| DELETE | `/api/devices/{id}` | Gerät und letzten Messwert löschen |
+
+Zusätzliche private IPv4-Netze können beim Backend-Start über `NETWORK_MONITOR_ALLOWED_SUBNETS` als kommaseparierte CIDR-Liste angegeben werden. Die Einstellung gilt für den gestarteten Prozess. Ein neu gespeichertes Gerät innerhalb eines freigegebenen Netzes ist sofort manuell prüfbar. Ohne Einstellung gelten die beiden einzeln freigegebenen Adressen. Für die Löschung fragt die Oberfläche nach Bestätigung. Während einer laufenden Prüfung lehnt die API die Löschung mit `409` ab.
 
 ## Sprachen und Fehler
 

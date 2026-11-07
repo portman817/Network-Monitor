@@ -153,3 +153,8 @@ Status: Umfang vom Benutzer bestätigt und vollständig implementiert; automatis
 - Die erste Version ist als lokale Entwicklungsanwendung mit einem Backend-Prozess geprüft. Produktionsbereitstellung, Mehrprozessbegrenzung und automatische Überwachung gehören nicht zur Abnahme dieser Version.
 
 Die zentrale Liste `ALLOWED_ADDRESSES` wird serverseitig durchgesetzt und an das PowerShell-Programm übergeben. `check_allowed` wird aus der gespeicherten Adresse berechnet und in der Geräteantwort ausgegeben. Eine Datenbankmigration ist dafür nicht erforderlich.
+
+## Teilumfang von Etappe 7
+
+- Der Betreiber kann private IPv4-Netze mit `NETWORK_MONITOR_ALLOWED_SUBNETS` explizit freigeben. Ohne diese Einstellung gelten die zwei bestehenden Einzelfreigaben. Der Server berechnet `check_allowed` und prüft die Adresse vor jedem Ping. Domänen bleiben von ICMP-Prüfungen ausgeschlossen.
+- `DELETE /api/devices/{id}` löscht den Datensatz einschließlich des letzten Messwerts nach Bestätigung in der Oberfläche. Eine laufende Prüfung verhindert die Löschung. Rollen und Netzwerkbereitstellung bleiben spätere Aufgaben.

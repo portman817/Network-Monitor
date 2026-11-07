@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { checkDevice, getDevices, getHealth } from './api/devices';
+import { checkDevice, deleteDevice, getDevices, getHealth } from './api/devices';
 import { locale, t, useLocale, setLocale, languages } from './i18n';
 import DeviceForm from './components/DeviceForm';
 import DeviceList from './components/DeviceList';
@@ -65,6 +65,15 @@ export default function App() {
     return () => listRequest.current?.abort();
   }, []);
 
+  async function handleDeleted(id) {
+    await deleteDevice(id);
+    listRequest.current?.abort();
+    setDevices((current) => current.filter((device) => device.id !== id));
+    setCheckErrors(({ [id]: removed, ...remaining }) => remaining);
+    setCooldowns(({ [id]: removed, ...remaining }) => remaining);
+    loadDevices();
+  }
+
   function handleCreated(device) {
     listRequest.current?.abort();
     setDevices((current) => [...current.filter((item) => item.id !== device.id), device].sort((a, b) => a.id - b.id));
@@ -81,7 +90,7 @@ export default function App() {
         <p>{t('intro')}</p><p className="muted" role="status">{t(health)}</p></header>
       <DeviceForm onCreated={handleCreated} />
       <DeviceList devices={devices} loading={loading} error={error} onRefresh={loadDevices}
-        onCheck={handleCheck} checking={checking} checkErrors={checkErrors} cooldowns={cooldowns} />
+        onDelete={handleDeleted} onCheck={handleCheck} checking={checking} checkErrors={checkErrors} cooldowns={cooldowns} />
       <p className="muted">{t('networkNotice')}</p>
     </main>
   );

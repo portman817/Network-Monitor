@@ -3,6 +3,7 @@ import ctypes
 import ipaddress
 import json
 import math
+import os
 import subprocess
 import sys
 import threading
@@ -12,6 +13,19 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ALLOWED_ADDRESSES = frozenset({"127.0.0.1", "192.168.0.247"})
+PRIVATE_NETWORKS = tuple(ipaddress.IPv4Network(value) for value in (
+    "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16",
+))
+
+
+def configured_networks(value: str) -> tuple[ipaddress.IPv4Network, ...]:
+    networks = tuple(ipaddress.IPv4Network(item.strip()) for item in value.split(",") if item.strip())
+    if any(not any(network.subnet_of(private) for private in PRIVATE_NETWORKS) for network in networks):
+        raise ValueError("NETWORK_MONITOR_ALLOWED_SUBNETS requires private IPv4 networks")
+    return networks
+
+
+ALLOWED_NETWORKS = configured_networks(os.environ.get("NETWORK_MONITOR_ALLOWED_SUBNETS", ""))
 ICMP_TIMEOUT_MS = 1000
 PROCESS_TIMEOUT_SECONDS = 5
 CHECK_INTERVAL_SECONDS = 5
@@ -25,13 +39,27 @@ class CheckError(Exception):
         super().__init__(code)
 
 
+def is_check_allowed(address: str) -> bool:
+    if address in ALLOWED_ADDRESSES:
+        return True
+    try:
+        target = ipaddress.IPv4Address(address)
+    except ValueError:
+        return False
+    return any(
+        target in network
+        and (network.prefixlen >= 31 or target not in (network.network_address, network.broadcast_address))
+        for network in ALLOWED_NETWORKS
+    )
+
+
 def allowed_target(address: str) -> str:
     # Domains are deliberately rejected without DNS resolution.
     try:
         target = str(ipaddress.ip_address(address))
     except ValueError:
         raise CheckError(403, "target_forbidden") from None
-    if target not in ALLOWED_ADDRESSES:
+    if not is_check_allowed(target):
         raise CheckError(403, "target_forbidden")
     return target
 
@@ -76,7 +104,7 @@ def ping_once(address: str) -> PingResult:
     try:
         completed = subprocess.run(
             [str(executable), "-NoLogo", "-NoProfile", "-NonInteractive", "-EncodedCommand", encoded],
-            input=json.dumps({"address": target, "allowed_addresses": sorted(ALLOWED_ADDRESSES)}),
+            input=json.dumps({"address": target, "allowed_addresses": [target]}),
             capture_output=True,
             text=True,
             encoding="utf-8",
@@ -122,17 +150,22 @@ class CheckLimiter:
     @contextmanager
     def acquire(self, device_id: int):
         with self.lock:
-            now = self.clock()
-            self.last_started = {key: value for key, value in self.last_started.items()
-                                 if now - value < CHECK_INTERVAL_SECONDS}
             if device_id in self.active:
                 raise CheckError(409, "check_in_progress")
-            if device_id in self.last_started or len(self.active) >= MAX_CONCURRENT_CHECKS:
+            if len(self.active) >= MAX_CONCURRENT_CHECKS:
                 raise CheckError(429, "check_rate_limited")
             self.active.add(device_id)
-            self.last_started[device_id] = now
         try:
             yield
         finally:
             with self.lock:
                 self.active.remove(device_id)
+
+    def start(self, device_id: int) -> None:
+        with self.lock:
+            now = self.clock()
+            self.last_started = {key: value for key, value in self.last_started.items()
+                                 if now - value < CHECK_INTERVAL_SECONDS}
+            if device_id in self.last_started:
+                raise CheckError(429, "check_rate_limited")
+            self.last_started[device_id] = now

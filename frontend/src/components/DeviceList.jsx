@@ -1,7 +1,23 @@
 import { useEffect, useState } from 'react';
 import { formatCheckedAt, formatLatency, t, errorMessage } from '../i18n';
 
-export default function DeviceList({ devices, loading, error, onRefresh, onCheck, checking, checkErrors, cooldowns }) {
+export default function DeviceList({ devices, loading, error, onRefresh, onDelete, onCheck, checking, checkErrors, cooldowns }) {
+  const [deleting, setDeleting] = useState(null);
+  const [deleteError, setDeleteError] = useState(null);
+
+  async function remove(device) {
+    if (deleting !== null || !window.confirm(t('deleteConfirm', { name: device.name }))) return;
+    setDeleteError(null);
+    setDeleting(device.id);
+    try {
+      await onDelete(device.id);
+    } catch (error) {
+      setDeleteError(error);
+    } finally {
+      setDeleting(null);
+    }
+  }
+
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
     if (!Object.values(cooldowns).some((deadline) => deadline > Date.now())) return;
@@ -18,6 +34,7 @@ export default function DeviceList({ devices, loading, error, onRefresh, onCheck
       <div className="section-heading"><h2 id="devices-heading">{t('devices')} <span className="count">{devices.length}</span></h2>
         <button className="secondary" onClick={onRefresh} disabled={loading}>{t(loading ? 'loading' : 'refresh')}</button></div>
       {error && <p className="error" role="alert">{errorMessage(error)} {t('retry')}</p>}
+      {deleteError && <p className="error" role="alert">{errorMessage(deleteError)}</p>}
       {loading && <p role="status">{t('loading')}</p>}
       {!loading && !error && devices.length === 0 && <p className="muted">{t('empty')}</p>}
       {devices.length > 0 && <div className="table-scroll" tabIndex={0} role="region" aria-label={t('caption')}>
@@ -29,13 +46,21 @@ export default function DeviceList({ devices, loading, error, onRefresh, onCheck
           return <tr key={device.id}><td>{device.name}</td><td className="address">{device.address}</td>
             <td><span className={`badge status-${device.status}`}>{t(device.status)}</span></td>
             <td>{formatLatency(device.latency_ms)}</td><td>{formatCheckedAt(device.last_checked_at)}</td>
-            <td><button className="secondary" onClick={() => onCheck(device.id)}
-              disabled={forbidden || checking.has(device.id) || seconds > 0} aria-label={t('checkDevice', { name: device.name })}
-              aria-describedby={forbidden ? `check-help-${device.id}` : undefined}>
-              {checking.has(device.id) ? t('checking') : seconds > 0 ? t('cooldown', { seconds }) : t('action')}
-            </button>
-            {forbidden && <p id={`check-help-${device.id}`} className="muted">{t('forbiddenHint')}</p>}
-            {checkErrors[device.id] && <p className="error" role="alert">{errorMessage(checkErrors[device.id])}</p>}
+            <td>
+              <div className="device-actions">
+                <button className="secondary" onClick={() => onCheck(device.id)}
+                  disabled={deleting === device.id || forbidden || checking.has(device.id) || seconds > 0}
+                  aria-label={t('checkDevice', { name: device.name })}
+                  aria-describedby={forbidden ? `check-help-${device.id}` : undefined}>
+                  {checking.has(device.id) ? t('checking') : seconds > 0 ? t('cooldown', { seconds }) : t('action')}
+                </button>
+                <button className="secondary danger" onClick={() => remove(device)}
+                  disabled={deleting !== null || checking.has(device.id)}>
+                  {t(deleting === device.id ? 'deleting' : 'deleteDevice')}
+                </button>
+              </div>
+              {forbidden && <p id={`check-help-${device.id}`} className="muted">{t('forbiddenHint')}</p>}
+              {checkErrors[device.id] && <p className="error" role="alert">{errorMessage(checkErrors[device.id])}</p>}
             </td></tr>;
         })}</tbody></table>
       </div>}

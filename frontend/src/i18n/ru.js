@@ -1,4 +1,5 @@
 export default {
+  deleteDevice: 'Удалить', deleting: 'Удаляем…', deleteConfirm: 'Удалить {name} и результат последней проверки?',
   language: 'Язык', language_en: 'English', language_de: 'Deutsch', language_ru: 'Русский',
   title: 'Network Monitor', eyebrow: 'Управление сетевыми устройствами', intro: 'Добавляйте устройства и просматривайте последние результаты.',
   healthLoading: 'Проверяем соединение с backend…', healthOk: 'Backend подключён', healthError: 'Backend недоступен. Обновите список для повторной проверки.',

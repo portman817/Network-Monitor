@@ -166,3 +166,11 @@ Ergebnis: Alle sechs vereinbarten Etappen der ersten lokalen Version umgesetzt u
 - Der Benutzer hat den einzelnen Drucker `192.168.0.247` freigegeben. Die zentrale Liste enthält zusätzlich weiterhin `127.0.0.1`. Python und PowerShell prüfen dieselbe Liste, die Oberfläche verwendet `check_allowed`.
 - Reale Prüfung des gespeicherten Druckers über den API-Endpunkt mit TestClient erfolgreich. HTTP 200, Status `online`, Latenz 6 ms. Ergebnis in der bestehenden Gerätezeile gespeichert.
 - 92 Backend-Tests, 38 Frontend-Tests und Frontend-Build erfolgreich.
+
+## 7. November 2026 – Dynamische Prüffreigabe und Gerätelöschung
+
+- Konfigurierbare private IPv4-Netze und sofortige manuelle Prüfbarkeit beim Speichern innerhalb dieser Netze umgesetzt. Keine zusätzliche reale Netzfreigabe aktiviert.
+- Löschfunktion mit Bestätigung, übersetzten Beschriftungen und Schutz vor Löschen während einer laufenden Prüfung umgesetzt.
+- 95 Backend-Tests, 38 Frontend-Tests und Frontend-Build erfolgreich. Löschprüfung mit isolierter Testdatenbank durchgeführt.
+
+- Nach der Codeprüfung beginnt die Wartezeit erst nach erfolgreicher Geräte- und Adressprüfung. Regressionstests bestätigen wiederholte Antworten mit 403 und 404 sowie die Löschsperre während einer laufenden Prüfung. Alle 97 Backend-Tests waren erfolgreich.

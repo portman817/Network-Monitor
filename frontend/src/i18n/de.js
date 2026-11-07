@@ -1,4 +1,5 @@
 export default {
+  deleteDevice: 'Löschen', deleting: 'Wird gelöscht…', deleteConfirm: '{name} und das letzte Prüfergebnis löschen?',
   language: 'Sprache', language_en: 'English', language_de: 'Deutsch', language_ru: '\u0420\u0443\u0441\u0441\u043a\u0438\u0439',
   title: 'Network Monitor', eyebrow: 'Netzwerkgeräte verwalten', intro: 'Geräte hinzufügen und die neuesten Ergebnisse anzeigen.',
   healthLoading: 'Backend-Verbindung wird geprüft…', healthOk: 'Backend verbunden', healthError: 'Backend nicht erreichbar. Zum Wiederholen aktualisieren.',

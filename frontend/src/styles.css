@@ -44,6 +44,9 @@ button.secondary { background: white; color: #265bb4; }
 .section-heading h2 { margin: 0; }
 .count { font-size: .9rem; color: #526079; margin-left: 6px; }
 .table-scroll { overflow-x: auto; }
+.device-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+button.secondary.danger { border-color: #e2a6a6; color: #942525; }
+button.secondary.danger:hover:not(:disabled) { background: #fff0ee; }
 table { width: 100%; border-collapse: collapse; text-align: left; }
 th, td { padding: 14px 12px; border-bottom: 1px solid #e2e8f0; overflow-wrap: anywhere; }
 th { color: #526079; font-size: .85rem; background: #f7f9fc; }

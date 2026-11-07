@@ -84,10 +84,11 @@ Die erste lokale Version umfasst die abgeschlossenen Etappen 1 bis 6. Die folgen
 
 Für jede Etappe vor Beginn den konkreten Umfang und die Umsetzung mit dem Benutzer abstimmen. Neue Abhängigkeiten und zusätzliche reale Netzwerkziele benötigen gesonderte Freigabe. Aktuell sind `127.0.0.1` und der ausdrücklich freigegebene Drucker `192.168.0.247` für ICMP erlaubt. Gespeicherte Geräte erhalten keine automatische Prüferlaubnis.
 
-## Etappe 7 – Geräteverwaltung und Prüfberechtigungen: geplant
+## Etappe 7 – Geräteverwaltung und Prüfberechtigungen: teilweise umgesetzt
 
 - [ ] Geräte bearbeiten; Namen und Adressen weiterhin validieren und Duplikate behandeln.
-- [ ] Geräte mit ausdrücklicher Bestätigung löschen; Auswirkungen auf gespeicherte Daten definieren.
+- [x] Geräte mit Bestätigung und letztem Messwert löschen.
+- [x] Manuelle Prüfungen für neu gespeicherte Geräte innerhalb ausdrücklich konfigurierter privater IPv4-Netze ermöglichen.
 - [ ] Erlaubte Prüfziele ausdrücklich verwalten und von bloß gespeicherten Geräteadressen trennen.
 - [ ] Erweiterung auf eigene Netzwerkadressen nur nach gesonderter Benutzerfreigabe planen; bisherige Loopback-Beschränkung bis dahin beibehalten.
 - [ ] API, Oberfläche, Berechtigungen und Fehlerfälle testen; Übersetzungen und Dokumentation aktualisieren.
@@ -143,4 +144,4 @@ Implementierung und Dokumentation fertigstellen, passende Tests und Build ausfü
 
 ## Unmittelbarer nächster Schritt
 
-Erste lokale Version abnehmen und den konkreten Umfang von Etappe 7 planen. Danach ausdrückliche Implementierungsfreigabe einholen. Die Etappen 7 bis 12 sind noch nicht begonnen; reale ICMP-Prüfungen sind auf `127.0.0.1` und `192.168.0.247` beschränkt.
+Erste lokale Version abnehmen und den konkreten Umfang von Etappe 7 planen. Danach ausdrückliche Implementierungsfreigabe einholen. Etappe 7 ist teilweise umgesetzt. Etappen 8 bis 12 sind geplant; reale ICMP-Prüfungen sind auf `127.0.0.1` und `192.168.0.247` beschränkt.

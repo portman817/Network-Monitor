@@ -4,7 +4,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field, computed_field, field_validator
 
-from .ping import ALLOWED_ADDRESSES
+from .ping import is_check_allowed
 
 LABEL = re.compile(r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?", re.ASCII)
 
@@ -70,4 +70,4 @@ class DeviceRead(BaseModel):
     @computed_field
     @property
     def check_allowed(self) -> bool:
-        return self.address in ALLOWED_ADDRESSES
+        return is_check_allowed(self.address)

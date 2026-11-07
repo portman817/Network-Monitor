@@ -3,7 +3,7 @@ from typing import Annotated
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Path, Request
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -37,17 +37,33 @@ def create_device(payload: DeviceCreate, session: DatabaseSession):
     return response
 
 
+@router.delete("/{device_id}", status_code=204)
+def delete_device(request: Request, device_id: Annotated[int, Path(ge=1, le=9223372036854775807)],
+                  session: DatabaseSession):
+    limiter = request.app.state.check_limiter
+    with limiter.lock:
+        if device_id in limiter.active:
+            raise HTTPException(409, detail={"code": "check_in_progress"})
+        result = session.execute(delete(Device).where(Device.id == device_id))
+        if not result.rowcount:
+            raise HTTPException(404, detail={"code": "device_not_found"})
+        session.commit()
+        limiter.last_started.pop(device_id, None)
+
+
 @router.post("/{device_id}/check", response_model=DeviceRead)
 def check_device(request: Request, device_id: Annotated[int, Path(ge=1, le=9223372036854775807)]):
     engine = request.app.state.engine
+    limiter = request.app.state.check_limiter
     try:
-        # Close the read transaction before waiting for a network response.
-        with Session(engine) as session:
-            device = session.get(Device, device_id)
-            if device is None:
-                raise HTTPException(404, detail={"code": "device_not_found"})
-            target = allowed_target(device.address)
-        with request.app.state.check_limiter.acquire(device_id):
+        with limiter.acquire(device_id):
+            # Close the read transaction before waiting for a network response.
+            with Session(engine) as session:
+                device = session.get(Device, device_id)
+                if device is None:
+                    raise HTTPException(404, detail={"code": "device_not_found"})
+                target = allowed_target(device.address)
+            limiter.start(device_id)
             result = request.app.state.ping_runner(target)
             checked_at = datetime.now(timezone.utc)
             with Session(engine) as session:

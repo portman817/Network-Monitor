@@ -28,7 +28,7 @@ def mock_run(monkeypatch, stdout, returncode=0):
         assert kwargs["shell"] is False
         assert kwargs["timeout"] == 5
         assert json.loads(kwargs["input"]) == {
-            "address": "127.0.0.1", "allowed_addresses": ["127.0.0.1", "192.168.0.247"],
+            "address": "127.0.0.1", "allowed_addresses": ["127.0.0.1"],
         }
         assert "127.0.0.1" not in args
         return SimpleNamespace(returncode=returncode, stdout=stdout)
@@ -82,6 +82,7 @@ def test_limiter_concurrency_cooldown_and_cleanup():
     now = [0.0]
     limiter = ping.CheckLimiter(clock=lambda: now[0])
     with limiter.acquire(1):
+        limiter.start(1)
         with pytest.raises(ping.CheckError, match="check_in_progress"):
             with limiter.acquire(1):
                 pass
@@ -92,10 +93,11 @@ def test_limiter_concurrency_cooldown_and_cleanup():
     assert not limiter.active
     with pytest.raises(ping.CheckError, match="check_rate_limited"):
         with limiter.acquire(1):
-            pass
+            limiter.start(1)
     now[0] = 5.0
     with pytest.raises(RuntimeError):
         with limiter.acquire(1):
+            limiter.start(1)
             raise RuntimeError
     assert not limiter.active
     assert len(limiter.last_started) == 1
