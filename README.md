@@ -57,7 +57,7 @@ Ein Gerät mit Name und IP-Adresse oder Domänenname hinzufügen. Namen haben na
 
 Die SQLite-Datei `backend/data/network_monitor.sqlite3` wird beim Start erstellt; der absolute Pfad ist unabhängig vom Arbeitsverzeichnis. Geräte und Messwerte überstehen einen Neustart. Datenbankdateien sind von Git ausgeschlossen. `create_all` erstellt fehlende Tabellen, ersetzt aber keine Migration bestehender Schemata.
 
-Nur `127.0.0.1` ist für reale ICMP-Prüfungen freigegeben. Alle anderen Ziele einschließlich `localhost`, `::1` und Domänennamen sind verboten; die Speicherung eines Geräts erteilt keine Prüferlaubnis. Es erfolgt keine DNS-Auflösung.
+Für reale ICMP-Prüfungen sind nur `127.0.0.1` und der Drucker `192.168.0.247` freigegeben. Die Freigabeliste steht in `backend/app/ping.py` unter `ALLOWED_ADDRESSES`. Das API-Feld `check_allowed` steuert die Prüfschaltfläche. Alle anderen Ziele einschließlich `localhost`, `::1` und Domänennamen sind verboten; die Speicherung eines Geräts erteilt keine Prüferlaubnis. Es erfolgt keine DNS-Auflösung.
 
 Eine manuelle Prüfung sendet einen Echo Request mit 1000 ms Antwortwartezeit. Der äußere Prozesswartezeitrahmen beträgt fünf Sekunden. Höchstens zwei Prüfungen je Prozess, keine gleichzeitige Prüfung derselben Geräte-ID und mindestens fünf Sekunden zwischen Prüfstarts. Die Oberfläche berücksichtigt Abkühlzeit und `Retry-After`.
 

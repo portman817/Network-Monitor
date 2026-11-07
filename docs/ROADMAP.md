@@ -82,7 +82,7 @@ Die erste lokale Version umfasst die abgeschlossenen Etappen 1 bis 6. Die folgen
 
 ## Weiterentwicklung – vereinbarte Planung
 
-Für jede Etappe vor Beginn den konkreten Umfang und die Umsetzung mit dem Benutzer abstimmen. Neue Abhängigkeiten und zusätzliche reale Netzwerkziele benötigen gesonderte Freigabe. Bis dahin bleibt ausschließlich `127.0.0.1` für ICMP erlaubt. Gespeicherte Geräte erhalten keine automatische Prüferlaubnis.
+Für jede Etappe vor Beginn den konkreten Umfang und die Umsetzung mit dem Benutzer abstimmen. Neue Abhängigkeiten und zusätzliche reale Netzwerkziele benötigen gesonderte Freigabe. Aktuell sind `127.0.0.1` und der ausdrücklich freigegebene Drucker `192.168.0.247` für ICMP erlaubt. Gespeicherte Geräte erhalten keine automatische Prüferlaubnis.
 
 ## Etappe 7 – Geräteverwaltung und Prüfberechtigungen: geplant
 
@@ -143,4 +143,4 @@ Implementierung und Dokumentation fertigstellen, passende Tests und Build ausfü
 
 ## Unmittelbarer nächster Schritt
 
-Erste lokale Version abnehmen und den konkreten Umfang von Etappe 7 planen. Danach ausdrückliche Implementierungsfreigabe einholen. Die Etappen 7 bis 12 sind noch nicht begonnen; reale ICMP-Prüfungen bleiben ausschließlich für `127.0.0.1` erlaubt.
+Erste lokale Version abnehmen und den konkreten Umfang von Etappe 7 planen. Danach ausdrückliche Implementierungsfreigabe einholen. Die Etappen 7 bis 12 sind noch nicht begonnen; reale ICMP-Prüfungen sind auf `127.0.0.1` und `192.168.0.247` beschränkt.

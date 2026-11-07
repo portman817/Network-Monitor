@@ -11,7 +11,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 
-ALLOWED_ADDRESSES = frozenset({"127.0.0.1"})
+ALLOWED_ADDRESSES = frozenset({"127.0.0.1", "192.168.0.247"})
 ICMP_TIMEOUT_MS = 1000
 PROCESS_TIMEOUT_SECONDS = 5
 CHECK_INTERVAL_SECONDS = 5
@@ -49,7 +49,7 @@ $ProgressPreference = 'SilentlyContinue'
 try {
     $data = [Console]::In.ReadToEnd() | ConvertFrom-Json
     $ip = [System.Net.IPAddress]::Parse($data.address)
-    if ($ip.ToString() -ne '127.0.0.1') { throw 'Forbidden target' }
+    if ($ip.ToString() -notin $data.allowed_addresses) { throw 'Forbidden target' }
     $ping = New-Object System.Net.NetworkInformation.Ping
     try {
         $reply = $ping.Send($ip, 1000)
@@ -76,7 +76,7 @@ def ping_once(address: str) -> PingResult:
     try:
         completed = subprocess.run(
             [str(executable), "-NoLogo", "-NoProfile", "-NonInteractive", "-EncodedCommand", encoded],
-            input=json.dumps({"address": target}),
+            input=json.dumps({"address": target, "allowed_addresses": sorted(ALLOWED_ADDRESSES)}),
             capture_output=True,
             text=True,
             encoding="utf-8",

@@ -92,7 +92,7 @@ Python, FastAPI, React und Vite bilden die technische Grundlage. SQLite und SQLA
 
 ### Freigabe und Sicherheit
 
-- Ausschließlich `127.0.0.1` ist für reale Prüfungen erlaubt. Alle anderen IPv4-/IPv6-Adressen, Netze und Domänen einschließlich `localhost` werden mit `403` vor jedem Prozessstart abgelehnt. Keine DNS-Auflösung; deshalb ist der zuvor vorgeschlagene DNS-Zeitrahmen von zwei Sekunden derzeit nicht erforderlich.
+- Für reale Prüfungen sind ausschließlich `127.0.0.1` und `192.168.0.247` erlaubt. Alle anderen IPv4-/IPv6-Adressen, Netze und Domänen einschließlich `localhost` werden mit `403` vor jedem Prozessstart abgelehnt. Keine DNS-Auflösung; deshalb ist der zuvor vorgeschlagene DNS-Zeitrahmen von zwei Sekunden derzeit nicht erforderlich.
 - `allowed_target` prüft das Ziel im API und erneut im Ping-Adapter. Auch das feste PowerShell-Programm erlaubt ausschließlich diese Adresse. Keine vom Client übergebene Zieladresse oder Zeitüberschreitung im Prüf-Endpunkt.
 - Windows-Adapter über den Systempfad aus `GetSystemDirectoryW`; PowerShell ohne Profil, nicht interaktiv und ohne Fenster. Fester UTF-16LE-kodierter Programmtext; Ziel als JSON über Standardeingabe, keine Einfügung in Befehlsquelltext, `shell=False`.
 - Keine neuen Pakete, keine erweiterten Benutzerrechte und keine Änderung von ExecutionPolicy oder Firewall. Andere Betriebssysteme liefern eine klare Nichtverfügbarkeitsmeldung.
@@ -141,7 +141,7 @@ Python, FastAPI, React und Vite bilden die technische Grundlage. SQLite und SQLA
 - Technische API-Werte, Fehlercodes und Identifikatoren nicht übersetzen. Russische Übersetzungen ausschließlich im separaten Wörterbuch ablegen, nicht in React-Komponenten.
 - Alle drei Sprachen, Rückfall, Speicherung und Sprachwechsel automatisiert und im Browser prüfen, bevor die Abschlussprüfung und Dokumentation fertiggestellt werden.
 
-Status: Umfang vom Benutzer bestätigt und vollständig implementiert; automatische Tests und Browserprüfung erfolgreich. Die ICMP-Freigabe bleibt ausschließlich auf `127.0.0.1` beschränkt.
+Status: Umfang vom Benutzer bestätigt und vollständig implementiert; automatische Tests und Browserprüfung erfolgreich. Die ICMP-Freigabe richtet sich nach der expliziten Freigabeliste.
 
 
 ## Abschließende Implementierungsentscheidungen
@@ -151,3 +151,5 @@ Status: Umfang vom Benutzer bestätigt und vollständig implementiert; automatis
 - Fehlerzustände enthalten technische Codes und Feldschlüssel, Erfolgsmeldungen den Gerätenamen. Übersetzung erfolgt bei der Darstellung, sodass sichtbare Meldungen sofort die Sprache wechseln.
 - Die getrennten Wörterbücher `en.js`, `de.js` und `ru.js` besitzen dieselben Schlüssel und Platzhalter. Fehlende Übersetzungen fallen auf Englisch zurück. Russische Texte stehen ausschließlich im russischen Wörterbuch; Eigennamen der Sprachen in anderen Wörterbüchern sind technisch als Unicode-Escapes hinterlegt.
 - Die erste Version ist als lokale Entwicklungsanwendung mit einem Backend-Prozess geprüft. Produktionsbereitstellung, Mehrprozessbegrenzung und automatische Überwachung gehören nicht zur Abnahme dieser Version.
+
+Die zentrale Liste `ALLOWED_ADDRESSES` wird serverseitig durchgesetzt und an das PowerShell-Programm übergeben. `check_allowed` wird aus der gespeicherten Adresse berechnet und in der Geräteantwort ausgegeben. Eine Datenbankmigration ist dafür nicht erforderlich.

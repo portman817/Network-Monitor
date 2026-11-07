@@ -17,6 +17,20 @@ def add(client, address="127.0.0.1"):
     return response.json()["id"]
 
 
+def test_printer_is_allowed(client):
+    device_id = add(client, "192.168.0.247")
+    assert client.get("/api/devices").json()[0]["check_allowed"] is True
+
+    def ping(address):
+        assert address == "192.168.0.247"
+        return PingResult("online", 1.0)
+
+    client.app.state.ping_runner = ping
+    response = client.post(f"/api/devices/{device_id}/check")
+    assert response.status_code == 200
+    assert response.json()["status"] == "online"
+
+
 @pytest.mark.parametrize("result", [PingResult("online", 0.0), PingResult("offline", None)])
 def test_check_persists_result_and_utc(tmp_path, result):
     path = tmp_path / "checks.sqlite3"

@@ -25,7 +25,7 @@ export default function DeviceList({ devices, loading, error, onRefresh, onCheck
           {['name', 'address', 'status', 'latency', 'lastChecked', 'action'].map((key) => <th key={key} scope="col">{t(key)}</th>)}
         </tr></thead><tbody>{devices.map((device) => {
           const seconds = Math.max(0, Math.ceil(((cooldowns[device.id] ?? 0) - now) / 1000));
-          const forbidden = device.address !== '127.0.0.1';
+          const forbidden = device.check_allowed !== true;
           return <tr key={device.id}><td>{device.name}</td><td className="address">{device.address}</td>
             <td><span className={`badge status-${device.status}`}>{t(device.status)}</span></td>
             <td>{formatLatency(device.latency_ms)}</td><td>{formatCheckedAt(device.last_checked_at)}</td>

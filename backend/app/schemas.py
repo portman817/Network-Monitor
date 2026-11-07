@@ -2,7 +2,9 @@ import ipaddress
 import re
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, computed_field, field_validator
+
+from .ping import ALLOWED_ADDRESSES
 
 LABEL = re.compile(r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?", re.ASCII)
 
@@ -64,3 +66,8 @@ class DeviceRead(BaseModel):
     status: str
     latency_ms: float | None
     last_checked_at: datetime | None
+
+    @computed_field
+    @property
+    def check_allowed(self) -> bool:
+        return self.address in ALLOWED_ADDRESSES

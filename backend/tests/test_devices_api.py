@@ -25,7 +25,7 @@ def test_create_and_list(client, address, expected):
     assert response.status_code == 201
     assert response.json() == {
         "id": 1, "name": "Router", "address": expected, "status": "unknown",
-        "latency_ms": None, "last_checked_at": None,
+        "latency_ms": None, "last_checked_at": None, "check_allowed": False,
     }
     response_list = client.get("/api/devices")
     assert response_list.status_code == 200

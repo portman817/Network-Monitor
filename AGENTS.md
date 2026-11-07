@@ -39,4 +39,4 @@
 - Etappe 2 umfasst SQLite-Gerätespeicherung und Geräte-API, jedoch kein Ping, keine automatische Überwachung und keine neuen React-Komponenten.
 - Zukünftige Netzwerkprüfungen auf erlaubte Adressen beschränken. Ein gespeicherter Geräteeintrag allein bedeutet keine Prüferlaubnis.
 
-- Für reale ICMP-Prüfungen ist derzeit ausschließlich `127.0.0.1` freigegeben. Alle anderen Adressen, Netze und Domänen sind verboten; die Freigabe darf nicht ohne Benutzerauftrag erweitert werden. Zustände: `unknown`, `online`, `offline`.
+- Für reale ICMP-Prüfungen ist derzeit ausschließlich `127.0.0.1` und der Drucker `192.168.0.247` freigegeben. Alle anderen Adressen, Netze und Domänen sind verboten; die Freigabe darf nicht ohne Benutzerauftrag erweitert werden. Zustände: `unknown`, `online`, `offline`.

@@ -27,7 +27,9 @@ def mock_run(monkeypatch, stdout, returncode=0):
         assert args[0] == str(Path("trusted/powershell.exe"))
         assert kwargs["shell"] is False
         assert kwargs["timeout"] == 5
-        assert json.loads(kwargs["input"]) == {"address": "127.0.0.1"}
+        assert json.loads(kwargs["input"]) == {
+            "address": "127.0.0.1", "allowed_addresses": ["127.0.0.1", "192.168.0.247"],
+        }
         assert "127.0.0.1" not in args
         return SimpleNamespace(returncode=returncode, stdout=stdout)
     monkeypatch.setattr(ping.subprocess, "run", run)

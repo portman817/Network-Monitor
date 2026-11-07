@@ -160,3 +160,9 @@ Ergebnis: Alle sechs vereinbarten Etappen der ersten lokalen Version umgesetzt u
 - Checklisten, Migrationen vor Historien-Schemaänderungen, Aufbewahrungsdauer, kontrollierte Überwachung und Regeln zur Vermeidung von Fehlalarmen dokumentiert. TCP-/HTTP-Prüfungen und Zugriffsschutz vor späterer Netzwerkbereitstellung als zusätzliche Optionen aufgenommen.
 - Planung von Implementierungsfreigabe und Erlaubnis zusätzlicher Netzwerkziele getrennt. ICMP bleibt ausschließlich für `127.0.0.1` freigegeben.
 - Vorhandene Änderungen aus Etappe 6 erhalten. Nur ROADMAP und DEVLOG für diesen Auftrag ergänzt; keine Anwendungsquellen geändert, keine Tests oder Server gestartet, kein Commit und kein Push.
+
+## 7. November 2026 – Druckerprüfung freigegeben
+
+- Der Benutzer hat den einzelnen Drucker `192.168.0.247` freigegeben. Die zentrale Liste enthält zusätzlich weiterhin `127.0.0.1`. Python und PowerShell prüfen dieselbe Liste, die Oberfläche verwendet `check_allowed`.
+- Reale Prüfung des gespeicherten Druckers über den API-Endpunkt mit TestClient erfolgreich. HTTP 200, Status `online`, Latenz 6 ms. Ergebnis in der bestehenden Gerätezeile gespeichert.
+- 92 Backend-Tests, 38 Frontend-Tests und Frontend-Build erfolgreich.

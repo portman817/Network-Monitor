@@ -17,10 +17,10 @@ test('empty list offers adding a device', () => {
 });
 test('forbidden target cannot be checked and has explanation', () => {
   const html=renderToStaticMarkup(React.createElement(DeviceList,{...props,devices:[{id:1,name:'Router',address:'router',status:'unknown',latency_ms:null,last_checked_at:null}]}));
-  assert.match(html, /disabled/); assert.match(html,/only for 127.0.0.1/); assert.match(html,/No data/);
+  assert.match(html, /disabled/); assert.match(html,/explicitly allowed/); assert.match(html,/No data/);
 });
 test('renders checking, offline status and zero latency', () => {
-  const html=renderToStaticMarkup(React.createElement(DeviceList,{...props,checking:new Set([1]),devices:[{id:1,name:'Local',address:'127.0.0.1',status:'offline',latency_ms:0,last_checked_at:null}]}));
+  const html=renderToStaticMarkup(React.createElement(DeviceList,{...props,checking:new Set([1]),devices:[{id:1,name:'Local',address:'127.0.0.1',check_allowed:true,status:'offline',latency_ms:0,last_checked_at:null}]}));
   assert.match(html,/Checking…/); assert.match(html,/status-offline/); assert.match(html,/0 ms/);
 });
 test('form has English labels and associated fields', () => {
