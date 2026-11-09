@@ -12,10 +12,22 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 
-ALLOWED_ADDRESSES = frozenset({"127.0.0.1", "192.168.0.247"})
 PRIVATE_NETWORKS = tuple(ipaddress.IPv4Network(value) for value in (
     "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16",
 ))
+
+
+def configured_addresses(value: str) -> frozenset[str]:
+    addresses = {ipaddress.IPv4Address(item.strip()) for item in value.split(",") if item.strip()}
+    if any(not address.is_loopback and not any(address in network for network in PRIVATE_NETWORKS)
+           for address in addresses):
+        raise ValueError("NETWORK_MONITOR_ALLOWED_ADDRESSES requires private IPv4 or loopback addresses")
+    return frozenset(map(str, addresses))
+
+
+ALLOWED_ADDRESSES = configured_addresses(
+    os.environ.get("NETWORK_MONITOR_ALLOWED_ADDRESSES", "127.0.0.1,192.168.0.247")
+)
 
 
 def configured_networks(value: str) -> tuple[ipaddress.IPv4Network, ...]:

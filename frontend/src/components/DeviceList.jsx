@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { formatCheckedAt, formatLatency, t, errorMessage } from '../i18n';
 
-export default function DeviceList({ devices, loading, error, onRefresh, onDelete, onCheck, checking, checkErrors, cooldowns }) {
+export default function DeviceList({ devices, loading, error, onRefresh, onDelete, onEdit, editingId,
+  onCheck, checking, checkErrors, cooldowns }) {
   const [deleting, setDeleting] = useState(null);
   const [deleteError, setDeleteError] = useState(null);
 
@@ -49,13 +50,17 @@ export default function DeviceList({ devices, loading, error, onRefresh, onDelet
             <td>
               <div className="device-actions">
                 <button className="secondary" onClick={() => onCheck(device.id)}
-                  disabled={deleting === device.id || forbidden || checking.has(device.id) || seconds > 0}
+                  disabled={editingId === device.id || deleting === device.id || forbidden || checking.has(device.id) || seconds > 0}
                   aria-label={t('checkDevice', { name: device.name })}
                   aria-describedby={forbidden ? `check-help-${device.id}` : undefined}>
                   {checking.has(device.id) ? t('checking') : seconds > 0 ? t('cooldown', { seconds }) : t('action')}
                 </button>
+                <button className="secondary" onClick={() => onEdit(device)}
+                  disabled={editingId != null || deleting === device.id || checking.has(device.id)}>
+                  {t('editDevice')}
+                </button>
                 <button className="secondary danger" onClick={() => remove(device)}
-                  disabled={deleting !== null || checking.has(device.id)}>
+                  disabled={editingId === device.id || deleting !== null || checking.has(device.id)}>
                   {t(deleting === device.id ? 'deleting' : 'deleteDevice')}
                 </button>
               </div>

@@ -1,6 +1,6 @@
 import { afterEach, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { addDevice, checkDevice, getDevices, getHealth, requestDevices, retryAfterSeconds } from './devices.js';
+import { addDevice, checkDevice, getDevices, getHealth, requestDevices, retryAfterSeconds, updateDevice } from './devices.js';
 
 const originalFetch = globalThis.fetch;
 afterEach(() => { globalThis.fetch = originalFetch; });
@@ -31,6 +31,17 @@ test('POST encodes name and address', async () => {
     return Response.json(device, { status: 201 });
   };
   assert.deepEqual(await addDevice({ name: 'Router', address: '127.0.0.1' }), device);
+});
+
+test('PUT sends edited fields and reports duplicate addresses', async () => {
+  const edited = { name: 'New name', address: 'router.local' };
+  globalThis.fetch = async (url, options) => {
+    assert.equal(url, '/api/devices/1');
+    assert.equal(options.method, 'PUT');
+    assert.deepEqual(JSON.parse(options.body), edited);
+    return Response.json({ detail: { code: 'duplicate_address' } }, { status: 409 });
+  };
+  await assert.rejects(updateDevice(1, edited), { code: 'duplicate_address' });
 });
 
 test('check returns zero RTT and UTC', async () => {

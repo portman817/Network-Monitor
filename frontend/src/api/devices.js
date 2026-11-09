@@ -73,6 +73,11 @@ export async function addDevice(device) {
     headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(device) }));
 }
 
+export async function updateDevice(id, device) {
+  return validateDevice(await requestDevices({ method: 'PUT',
+    headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(device) }, `/api/devices/${id}`));
+}
+
 export async function checkDevice(id) {
   return validateDevice(await requestDevices({ method: 'POST' }, `/api/devices/${id}/check`));
 }

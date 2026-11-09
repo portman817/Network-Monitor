@@ -154,9 +154,10 @@ Status: Umfang vom Benutzer bestätigt und vollständig implementiert; automatis
 
 Die zentrale Liste `ALLOWED_ADDRESSES` wird serverseitig durchgesetzt und an das PowerShell-Programm übergeben. `check_allowed` wird aus der gespeicherten Adresse berechnet und in der Geräteantwort ausgegeben. Eine Datenbankmigration ist dafür nicht erforderlich.
 
-## Teilumfang von Etappe 7
+## Etappe 7
 
-- Der Betreiber kann private IPv4-Netze mit `NETWORK_MONITOR_ALLOWED_SUBNETS` explizit freigeben. Ohne diese Einstellung gelten die zwei bestehenden Einzelfreigaben. Der Server berechnet `check_allowed` und prüft die Adresse vor jedem Ping. Domänen bleiben von ICMP-Prüfungen ausgeschlossen.
+- Der Betreiber verwaltet einzelne private IPv4- und IPv4-Loopback-Adressen mit `NETWORK_MONITOR_ALLOWED_ADDRESSES` sowie private IPv4-Netze mit `NETWORK_MONITOR_ALLOWED_SUBNETS`. Die Einstellungen werden beim Backend-Start geladen. Die Einzelliste ersetzt die Standardliste, Netzfreigaben gelten zusätzlich. Der Server berechnet `check_allowed` und prüft die Adresse vor jedem Ping. Domänen bleiben von ICMP-Prüfungen ausgeschlossen.
+- `PUT /api/devices/{id}` aktualisiert Name und Adresse mit derselben Validierung wie beim Anlegen. Doppelte Adressen und Änderungen während einer laufenden Prüfung werden mit `409` abgelehnt. Ein Adresswechsel setzt Status, Latenz, Prüfzeitpunkt und Wartezeit zurück.
 - `DELETE /api/devices/{id}` löscht den Datensatz einschließlich des letzten Messwerts nach Bestätigung in der Oberfläche. Eine laufende Prüfung verhindert die Löschung. Rollen und Netzwerkbereitstellung bleiben spätere Aufgaben.
 
 ### Gerätesuche im lokalen Netz

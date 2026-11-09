@@ -45,12 +45,14 @@ button.secondary { background: white; color: #265bb4; }
 .count { font-size: .9rem; color: #526079; margin-left: 6px; }
 .table-scroll { overflow-x: auto; }
 .device-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.table-scroll .device-actions { display: inline-grid; }
+.table-scroll .device-actions button { white-space: nowrap; }
 button.secondary.danger { border-color: #e2a6a6; color: #942525; }
 button.secondary.danger:hover:not(:disabled) { background: #fff0ee; }
 table { width: 100%; border-collapse: collapse; text-align: left; }
 th, td { padding: 14px 12px; border-bottom: 1px solid #e2e8f0; overflow-wrap: anywhere; }
 th { color: #526079; font-size: .85rem; background: #f7f9fc; }
-td { min-width: 120px; max-width: 280px; }
+td { min-width: 120px; max-width: 280px; vertical-align: top; }
 .address { font-family: ui-monospace, monospace; }
 .badge { display: inline-block; background: #edf1f7; color: #394960; padding: 4px 10px; border-radius: 20px; font-size: .85rem; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

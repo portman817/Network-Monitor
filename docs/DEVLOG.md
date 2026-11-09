@@ -180,3 +180,11 @@ Ergebnis: Alle sechs vereinbarten Etappen der ersten lokalen Version umgesetzt u
 - Manuelle ICMP-Suche in ausdrücklich konfigurierten privaten IPv4-Netzen, Fortschrittsanzeige und einzelnes Speichern der Treffer ergänzt. Die Oberfläche ist auf Englisch, Deutsch und Russisch verfügbar.
 - 98 Backend-Tests und 38 Frontend-Tests erfolgreich. Der Frontend-Build war erfolgreich. Der neue API-Test verwendet simulierte Ping-Ergebnisse. Eine reale Netzsuche wurde nicht ausgeführt.
 - Nach der Codeprüfung wartet die Oberfläche beim Stoppen auf die laufende Gruppe. Ein Timeout des Ping-Prozesses überspringt nur die betroffene Adresse. Ein API-Regressionstest bestätigt den Erhalt der Treffer und die Fehlerantwort bei nicht verfügbarem Ping. 99 Backend-Tests, 38 Frontend-Tests und der Frontend-Build waren erfolgreich.
+
+## 9. November 2026 – Abschluss von Etappe 7
+
+- Gerätebearbeitung in API und Oberfläche ergänzt. Namensänderungen erhalten Messwerte, Adressänderungen setzen sie zurück. Die API sperrt Änderungen während einer laufenden Prüfung.
+- Einzelne Prüfziele lassen sich getrennt von gespeicherten Geräten und Netzfreigaben beim Backend-Start konfigurieren. Es wurden keine neuen realen Prüfziele aktiviert.
+- 106 Backend-Tests, 40 Frontend-Tests und der Frontend-Build waren erfolgreich. Die Prüfabläufe wurden mit simulierten Antworten getestet. Eine manuelle Browserprüfung und reale Netzprüfungen wurden nicht ausgeführt.
+
+- Tabellenzellen oben ausgerichtet und die drei Geräteaktionen untereinander in gleicher Größe angeordnet. Der Frontend-Build war erfolgreich.

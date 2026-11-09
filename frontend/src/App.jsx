@@ -9,6 +9,7 @@ export default function App() {
   const language = useLocale();
   const [health, setHealth] = useState('healthLoading');
   const [devices, setDevices] = useState([]);
+  const [editing, setEditing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const listRequest = useRef(null);
@@ -81,6 +82,15 @@ export default function App() {
     loadDevices();
   }
 
+  function handleUpdated(device) {
+    if (editing.address !== device.address) {
+      setCheckErrors(({ [device.id]: removed, ...remaining }) => remaining);
+      setCooldowns(({ [device.id]: removed, ...remaining }) => remaining);
+    }
+    setEditing(null);
+    handleCreated(device);
+  }
+
   return (
     <main>
       <header><label className="language-picker" htmlFor="language">{t('language')}
@@ -89,10 +99,12 @@ export default function App() {
         </select>
       </label><p className="eyebrow">{t('eyebrow')}</p><h1>{t('title')}</h1>
         <p>{t('intro')}</p><p className="muted" role="status">{t(health)}</p></header>
-      <DeviceForm onCreated={handleCreated} />
+      {editing ? <DeviceForm key={editing.id} device={editing} onCreated={handleUpdated}
+        onCancel={() => setEditing(null)} /> : <DeviceForm key="add" onCreated={handleCreated} />}
       <DeviceDiscovery devices={devices} onCreated={handleCreated} />
       <DeviceList devices={devices} loading={loading} error={error} onRefresh={loadDevices}
-        onDelete={handleDeleted} onCheck={handleCheck} checking={checking} checkErrors={checkErrors} cooldowns={cooldowns} />
+        onDelete={handleDeleted} onEdit={setEditing} editingId={editing?.id}
+        onCheck={handleCheck} checking={checking} checkErrors={checkErrors} cooldowns={cooldowns} />
       <p className="muted">{t('networkNotice')}</p>
     </main>
   );

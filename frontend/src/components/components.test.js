@@ -29,6 +29,17 @@ test('form has English labels and associated fields', () => {
 });
 
 
+test('edit form starts with saved values and offers cancellation', () => {
+  const html = renderToStaticMarkup(React.createElement(DeviceForm, {
+    device: { id: 1, name: 'Router', address: '192.168.0.1' },
+  }));
+  assert.match(html, /Edit device/);
+  assert.match(html, /value="Router"/);
+  assert.match(html, /value="192\.168\.0\.1"/);
+  assert.match(html, /Save changes/);
+  assert.match(html, /Cancel/);
+});
+
 for (const language of ['en','de','ru']) {
   test(`form and visible errors render in ${language}`, () => {
     i18n.setLocale(language, {});

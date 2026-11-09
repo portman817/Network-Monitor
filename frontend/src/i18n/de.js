@@ -1,4 +1,7 @@
 export default {
+  editDevice: 'Gerät bearbeiten',
+  saveDevice: 'Änderungen speichern',
+  cancelEdit: 'Abbrechen',
   discoveryHeading: 'Geräte finden',
   discoverySubnet: 'Freigegebenes Netz',
   discoveryNoSubnet: 'Für die Suche ein privates IPv4-Netz mit Präfix /24 oder länger am Backend konfigurieren.',

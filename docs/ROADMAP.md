@@ -84,15 +84,15 @@ Die erste lokale Version umfasst die abgeschlossenen Etappen 1 bis 6. Die folgen
 
 Für jede Etappe vor Beginn den konkreten Umfang und die Umsetzung mit dem Benutzer abstimmen. Neue Abhängigkeiten und zusätzliche reale Netzwerkziele benötigen gesonderte Freigabe. Aktuell sind `127.0.0.1` und der ausdrücklich freigegebene Drucker `192.168.0.247` für ICMP erlaubt. Gespeicherte Geräte erhalten keine automatische Prüferlaubnis.
 
-## Etappe 7 – Geräteverwaltung und Prüfberechtigungen: teilweise umgesetzt
+## Etappe 7 – Geräteverwaltung und Prüfberechtigungen: abgeschlossen
 
-- [ ] Geräte bearbeiten; Namen und Adressen weiterhin validieren und Duplikate behandeln.
+- [x] Geräte bearbeiten; Namen und Adressen weiterhin validieren und Duplikate behandeln.
 - [x] Geräte mit Bestätigung und letztem Messwert löschen.
 - [x] Manuelle Prüfungen für neu gespeicherte Geräte innerhalb ausdrücklich konfigurierter privater IPv4-Netze ermöglichen.
 - [x] Geräte auf Benutzeranforderung in konfigurierten privaten IPv4-Netzen mit Präfix `/24` oder länger per ICMP suchen und Treffer einzeln übernehmen.
-- [ ] Erlaubte Prüfziele ausdrücklich verwalten und von bloß gespeicherten Geräteadressen trennen.
-- [ ] Erweiterung auf eigene Netzwerkadressen nur nach gesonderter Benutzerfreigabe planen; bisherige Loopback-Beschränkung bis dahin beibehalten.
-- [ ] API, Oberfläche, Berechtigungen und Fehlerfälle testen; Übersetzungen und Dokumentation aktualisieren.
+- [x] Erlaubte Prüfziele über die Backend-Startkonfiguration verwalten und von gespeicherten Geräteadressen trennen.
+- [x] Zusätzliche reale Ziele nur ausdrücklich freigeben. Die voreingestellten Einzelfreigaben bleiben bestehen.
+- [x] API, Oberfläche, Berechtigungen und Fehlerfälle testen; Übersetzungen und Dokumentation aktualisieren.
 
 ## Etappe 8 – Automatische Überwachung: geplant
 
@@ -145,4 +145,4 @@ Implementierung und Dokumentation fertigstellen, passende Tests und Build ausfü
 
 ## Unmittelbarer nächster Schritt
 
-Erste lokale Version abnehmen und den konkreten Umfang von Etappe 7 planen. Danach ausdrückliche Implementierungsfreigabe einholen. Etappe 7 ist teilweise umgesetzt. Etappen 8 bis 12 sind geplant; reale ICMP-Prüfungen sind auf `127.0.0.1` und `192.168.0.247` beschränkt.
+Den konkreten Umfang von Etappe 8 zur automatischen Überwachung abstimmen und die Implementierungsfreigabe einholen.

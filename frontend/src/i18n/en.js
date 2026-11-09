@@ -1,4 +1,7 @@
 export default {
+  editDevice: 'Edit device',
+  saveDevice: 'Save changes',
+  cancelEdit: 'Cancel',
   discoveryHeading: 'Find devices',
   discoverySubnet: 'Allowed subnet',
   discoveryNoSubnet: 'Configure a private IPv4 subnet of /24 or smaller on the backend to enable discovery.',

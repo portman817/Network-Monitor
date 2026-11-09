@@ -1,4 +1,7 @@
 export default {
+  editDevice: 'Редактировать устройство',
+  saveDevice: 'Сохранить изменения',
+  cancelEdit: 'Отмена',
   discoveryHeading: 'Найти устройства',
   discoverySubnet: 'Разрешённая подсеть',
   discoveryNoSubnet: 'Для поиска задайте на сервере частную подсеть IPv4 с префиксом /24 или длиннее.',

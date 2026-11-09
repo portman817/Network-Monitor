@@ -82,6 +82,39 @@ def create_device(payload: DeviceCreate, session: DatabaseSession):
     return response
 
 
+@router.put("/{device_id}", response_model=DeviceRead)
+def update_device(payload: DeviceCreate, request: Request,
+                  device_id: Annotated[int, Path(ge=1, le=9223372036854775807)],
+                  session: DatabaseSession):
+    limiter = request.app.state.check_limiter
+    with limiter.lock:
+        if device_id in limiter.active:
+            raise HTTPException(409, detail={"code": "check_in_progress"})
+        device = session.get(Device, device_id)
+        if device is None:
+            raise HTTPException(404, detail={"code": "device_not_found"})
+        address_changed = device.address != payload.address
+        device.name = payload.name
+        if address_changed:
+            device.address = payload.address
+            device.status = "unknown"
+            device.latency_ms = None
+            device.last_checked_at = None
+        try:
+            session.flush()
+            response = DeviceRead.model_validate(device)
+            session.commit()
+        except IntegrityError:
+            session.rollback()
+            if session.scalar(select(Device.id).where(Device.address == payload.address,
+                                                       Device.id != device_id)) is not None:
+                raise HTTPException(409, detail={"code": "duplicate_address"}) from None
+            raise
+        if address_changed:
+            limiter.last_started.pop(device_id, None)
+        return response
+
+
 @router.delete("/{device_id}", status_code=204)
 def delete_device(request: Request, device_id: Annotated[int, Path(ge=1, le=9223372036854775807)],
                   session: DatabaseSession):
