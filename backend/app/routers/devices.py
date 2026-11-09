@@ -1,12 +1,15 @@
 from typing import Annotated
 
 from datetime import datetime, timezone
+from ipaddress import IPv4Network
 
 from fastapi import APIRouter, Depends, HTTPException, Path, Request
 from sqlalchemy import delete, select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
+from pydantic import BaseModel, Field
 
+from .. import ping
 from ..database import get_session
 from ..models import Device
 from ..schemas import DeviceCreate, DeviceRead
@@ -14,6 +17,48 @@ from ..ping import CheckError, allowed_target
 
 router = APIRouter(prefix="/api/devices", tags=["devices"])
 DatabaseSession = Annotated[Session, Depends(get_session)]
+
+
+class DiscoveryBatch(BaseModel):
+    subnet: str
+    offset: int = Field(ge=0, le=254)
+
+
+@router.get("/discovery")
+def discovery_subnets() -> list[str]:
+    return sorted({str(network) for network in ping.ALLOWED_NETWORKS if network.prefixlen >= 24})
+
+
+@router.post("/discovery")
+def discover_devices(payload: DiscoveryBatch, request: Request):
+    if payload.subnet not in discovery_subnets():
+        raise HTTPException(403, detail={"code": "target_forbidden"})
+
+    network = IPv4Network(payload.subnet)
+    hosts = list(network.hosts())
+    batch = hosts[payload.offset:payload.offset + 4]
+    found = []
+    skipped = 0
+    try:
+        # Device IDs are positive. Reserve one of the existing Ping slots.
+        with request.app.state.check_limiter.acquire(0):
+            for host in batch:
+                address = allowed_target(str(host))
+                try:
+                    result = request.app.state.ping_runner(address)
+                except CheckError as exc:
+                    if exc.code != "ping_process_timeout":
+                        raise
+                    skipped += 1
+                    continue
+                if result.status == "online":
+                    found.append({"address": address, "latency_ms": result.latency_ms})
+    except CheckError as exc:
+        raise HTTPException(exc.status_code, detail={"code": exc.code}) from None
+
+    end = min(payload.offset + len(batch), len(hosts))
+    return {"found": found, "checked": end, "total": len(hosts), "skipped": skipped,
+            "next_offset": end if end < len(hosts) else None}
 
 
 @router.get("", response_model=list[DeviceRead])

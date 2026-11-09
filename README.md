@@ -73,6 +73,16 @@ Statuswerte: `unknown`, `online`, `offline`. Erfolg speichert Latenz und UTC-Zei
 
 Zusätzliche private IPv4-Netze können beim Backend-Start über `NETWORK_MONITOR_ALLOWED_SUBNETS` als kommaseparierte CIDR-Liste angegeben werden. Die Einstellung gilt für den gestarteten Prozess. Ein neu gespeichertes Gerät innerhalb eines freigegebenen Netzes ist sofort manuell prüfbar. Ohne Einstellung gelten die beiden einzeln freigegebenen Adressen. Für die Löschung fragt die Oberfläche nach Bestätigung. Während einer laufenden Prüfung lehnt die API die Löschung mit `409` ab.
 
+### Geräte im eigenen Netz finden
+
+Ein freigegebenes privates IPv4-Netz mit Präfix `/24` oder länger konfigurieren. Für das eigene Netz `192.168.0.0/24` beispielsweise vor dem Backend-Start in PowerShell:
+
+```powershell
+$env:NETWORK_MONITOR_ALLOWED_SUBNETS = "192.168.0.0/24"
+```
+
+In der Oberfläche das Netz auswählen und die Suche starten. Die Suche zeigt IP-Adressen und Latenzen von Hosts mit ICMP-Antwort. Firewalls oder Energiesparmodi können Antworten verhindern. Gefundene Geräte lassen sich einzeln mit der IP-Adresse als Anfangsnamen speichern. Beim Stoppen wartet die Oberfläche auf die laufende Gruppe, bevor eine neue Suche gestartet werden kann. Bei einer Zeitüberschreitung des Ping-Prozesses wird die betroffene Adresse übersprungen und in der Oberfläche mitgezählt.
+
 ## Sprachen und Fehler
 
 Die Sprachauswahl bietet Englisch, Deutsch und Russisch. Reihenfolge beim Öffnen: gespeicherte gültige Wahl, unterstützte Browsersprache, sonst Englisch. Regionale Varianten wie `de-DE` werden erkannt. Der Browser speichert die manuelle Auswahl lokal; bei blockiertem Speicher funktioniert sie für die laufende Sitzung weiter.

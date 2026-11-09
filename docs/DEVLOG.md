@@ -174,3 +174,9 @@ Ergebnis: Alle sechs vereinbarten Etappen der ersten lokalen Version umgesetzt u
 - 95 Backend-Tests, 38 Frontend-Tests und Frontend-Build erfolgreich. Löschprüfung mit isolierter Testdatenbank durchgeführt.
 
 - Nach der Codeprüfung beginnt die Wartezeit erst nach erfolgreicher Geräte- und Adressprüfung. Regressionstests bestätigen wiederholte Antworten mit 403 und 404 sowie die Löschsperre während einer laufenden Prüfung. Alle 97 Backend-Tests waren erfolgreich.
+
+## 9. November 2026 – Gerätesuche im lokalen Netz
+
+- Manuelle ICMP-Suche in ausdrücklich konfigurierten privaten IPv4-Netzen, Fortschrittsanzeige und einzelnes Speichern der Treffer ergänzt. Die Oberfläche ist auf Englisch, Deutsch und Russisch verfügbar.
+- 98 Backend-Tests und 38 Frontend-Tests erfolgreich. Der Frontend-Build war erfolgreich. Der neue API-Test verwendet simulierte Ping-Ergebnisse. Eine reale Netzsuche wurde nicht ausgeführt.
+- Nach der Codeprüfung wartet die Oberfläche beim Stoppen auf die laufende Gruppe. Ein Timeout des Ping-Prozesses überspringt nur die betroffene Adresse. Ein API-Regressionstest bestätigt den Erhalt der Treffer und die Fehlerantwort bei nicht verfügbarem Ping. 99 Backend-Tests, 38 Frontend-Tests und der Frontend-Build waren erfolgreich.

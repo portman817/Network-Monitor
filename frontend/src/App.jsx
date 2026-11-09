@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { checkDevice, deleteDevice, getDevices, getHealth } from './api/devices';
 import { locale, t, useLocale, setLocale, languages } from './i18n';
 import DeviceForm from './components/DeviceForm';
+import DeviceDiscovery from './components/DeviceDiscovery';
 import DeviceList from './components/DeviceList';
 
 export default function App() {
@@ -89,6 +90,7 @@ export default function App() {
       </label><p className="eyebrow">{t('eyebrow')}</p><h1>{t('title')}</h1>
         <p>{t('intro')}</p><p className="muted" role="status">{t(health)}</p></header>
       <DeviceForm onCreated={handleCreated} />
+      <DeviceDiscovery devices={devices} onCreated={handleCreated} />
       <DeviceList devices={devices} loading={loading} error={error} onRefresh={loadDevices}
         onDelete={handleDeleted} onCheck={handleCheck} checking={checking} checkErrors={checkErrors} cooldowns={cooldowns} />
       <p className="muted">{t('networkNotice')}</p>

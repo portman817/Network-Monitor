@@ -85,3 +85,26 @@ export async function getHealth(signal) {
   const data = await requestDevices({ signal }, '/api/health');
   if (data?.status !== 'ok') throw new ApiError('invalid_response');
 }
+
+export async function getDiscoverySubnets(signal) {
+  const subnets = await requestDevices({ signal }, '/api/devices/discovery');
+  if (!Array.isArray(subnets) || subnets.some((subnet) => typeof subnet !== 'string')) {
+    throw new ApiError('invalid_response');
+  }
+  return subnets;
+}
+
+export async function discoverBatch(subnet, offset, signal) {
+  const batch = await requestDevices({
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ subnet, offset }),
+    signal,
+  }, '/api/devices/discovery', 25000);
+  if (!Array.isArray(batch?.found) || !Number.isInteger(batch.skipped) || batch.skipped < 0
+    || (batch.next_offset !== null
+    && (!Number.isInteger(batch.next_offset) || batch.next_offset <= offset || batch.next_offset > 254))) {
+    throw new ApiError('invalid_response');
+  }
+  return batch;
+}

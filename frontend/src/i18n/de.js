@@ -1,4 +1,15 @@
 export default {
+  discoveryHeading: 'Geräte finden',
+  discoverySubnet: 'Freigegebenes Netz',
+  discoveryNoSubnet: 'Für die Suche ein privates IPv4-Netz mit Präfix /24 oder länger am Backend konfigurieren.',
+  discoveryHint: 'Die Suche zeigt Geräte, die auf Ping antworten. Sie kann mehrere Minuten dauern.',
+  discoveryStart: 'Suche starten',
+  discoveryStop: 'Suche stoppen',
+  discoveryStopping: 'Laufende Gruppe wird abgeschlossen…',
+  discoverySkipped: 'Wegen Ping-Zeitüberschreitung übersprungene Adressen: {count}.',
+  discoveryProgress: '{checked} von {total} Adressen geprüft.',
+  discoverySaved: 'Bereits hinzugefügt',
+
   deleteDevice: 'Löschen', deleting: 'Wird gelöscht…', deleteConfirm: '{name} und das letzte Prüfergebnis löschen?',
   language: 'Sprache', language_en: 'English', language_de: 'Deutsch', language_ru: '\u0420\u0443\u0441\u0441\u043a\u0438\u0439',
   title: 'Network Monitor', eyebrow: 'Netzwerkgeräte verwalten', intro: 'Geräte hinzufügen und die neuesten Ergebnisse anzeigen.',

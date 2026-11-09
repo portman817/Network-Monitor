@@ -89,6 +89,7 @@ Für jede Etappe vor Beginn den konkreten Umfang und die Umsetzung mit dem Benut
 - [ ] Geräte bearbeiten; Namen und Adressen weiterhin validieren und Duplikate behandeln.
 - [x] Geräte mit Bestätigung und letztem Messwert löschen.
 - [x] Manuelle Prüfungen für neu gespeicherte Geräte innerhalb ausdrücklich konfigurierter privater IPv4-Netze ermöglichen.
+- [x] Geräte auf Benutzeranforderung in konfigurierten privaten IPv4-Netzen mit Präfix `/24` oder länger per ICMP suchen und Treffer einzeln übernehmen.
 - [ ] Erlaubte Prüfziele ausdrücklich verwalten und von bloß gespeicherten Geräteadressen trennen.
 - [ ] Erweiterung auf eigene Netzwerkadressen nur nach gesonderter Benutzerfreigabe planen; bisherige Loopback-Beschränkung bis dahin beibehalten.
 - [ ] API, Oberfläche, Berechtigungen und Fehlerfälle testen; Übersetzungen und Dokumentation aktualisieren.

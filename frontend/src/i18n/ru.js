@@ -1,4 +1,15 @@
 export default {
+  discoveryHeading: 'Найти устройства',
+  discoverySubnet: 'Разрешённая подсеть',
+  discoveryNoSubnet: 'Для поиска задайте на сервере частную подсеть IPv4 с префиксом /24 или длиннее.',
+  discoveryHint: 'В результатах появятся устройства, ответившие на Ping. Поиск может занять несколько минут.',
+  discoveryStart: 'Начать поиск',
+  discoveryStop: 'Остановить поиск',
+  discoveryStopping: 'Завершается текущая группа…',
+  discoverySkipped: 'Пропущено адресов из-за таймаута Ping: {count}.',
+  discoveryProgress: 'Проверено адресов: {checked} из {total}.',
+  discoverySaved: 'Уже добавлено',
+
   deleteDevice: 'Удалить', deleting: 'Удаляем…', deleteConfirm: 'Удалить {name} и результат последней проверки?',
   language: 'Язык', language_en: 'English', language_de: 'Deutsch', language_ru: 'Русский',
   title: 'Network Monitor', eyebrow: 'Управление сетевыми устройствами', intro: 'Добавляйте устройства и просматривайте последние результаты.',

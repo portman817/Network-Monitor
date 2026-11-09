@@ -158,3 +158,7 @@ Die zentrale Liste `ALLOWED_ADDRESSES` wird serverseitig durchgesetzt und an das
 
 - Der Betreiber kann private IPv4-Netze mit `NETWORK_MONITOR_ALLOWED_SUBNETS` explizit freigeben. Ohne diese Einstellung gelten die zwei bestehenden Einzelfreigaben. Der Server berechnet `check_allowed` und prüft die Adresse vor jedem Ping. Domänen bleiben von ICMP-Prüfungen ausgeschlossen.
 - `DELETE /api/devices/{id}` löscht den Datensatz einschließlich des letzten Messwerts nach Bestätigung in der Oberfläche. Eine laufende Prüfung verhindert die Löschung. Rollen und Netzwerkbereitstellung bleiben spätere Aufgaben.
+
+### Gerätesuche im lokalen Netz
+
+Die Suche startet auf Benutzeranforderung. Die API akzeptiert nur exakt konfigurierte private IPv4-Netze mit Präfix `/24` oder länger und prüft bis zu vier Hostadressen je Anfrage über die bestehende ICMP-Prüfung und deren Parallelitätsgrenze. Die Oberfläche zeigt Fortschritt und antwortende Hosts an. Treffer werden erst durch einzelnes Hinzufügen gespeichert.

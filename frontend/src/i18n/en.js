@@ -1,4 +1,15 @@
 export default {
+  discoveryHeading: 'Find devices',
+  discoverySubnet: 'Allowed subnet',
+  discoveryNoSubnet: 'Configure a private IPv4 subnet of /24 or smaller on the backend to enable discovery.',
+  discoveryHint: 'Only hosts that reply to Ping appear. Discovery can take several minutes.',
+  discoveryStart: 'Start search',
+  discoveryStop: 'Stop search',
+  discoveryStopping: 'Finishing current batch…',
+  discoverySkipped: 'Addresses skipped due to a Ping timeout: {count}.',
+  discoveryProgress: 'Checked {checked} of {total} addresses.',
+  discoverySaved: 'Already added',
+
   deleteDevice: 'Delete', deleting: 'Deleting…', deleteConfirm: 'Delete {name} and its latest check result?',
   language: 'Language', language_en: 'English', language_de: 'Deutsch', language_ru: '\u0420\u0443\u0441\u0441\u043a\u0438\u0439',
   title: 'Network Monitor', eyebrow: 'Network device management', intro: 'Add devices and view their latest results.',
